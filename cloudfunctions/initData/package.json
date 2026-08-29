@@ -1,0 +1,14 @@
+{
+  "name": "initData",
+  "version": "1.0.0",
+  "description": "一键初始化：写入示例部门数据，并将首次调用者设为管理员",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "wx-server-sdk": "latest"
+  }
+}

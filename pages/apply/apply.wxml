@@ -1,0 +1,82 @@
+<view class="page-apply">
+  <!-- 报名未开放 -->
+  <view wx:if="{{!checking && !recruitOpen}}" class="card closed-card">
+    <text class="closed-icon">⏸️</text>
+    <text class="closed-title">报名暂未开放</text>
+    <text class="closed-desc">本次招新报名已截止或尚未开始，请留意校青协的通知，开放后可再次进入本页报名。</text>
+  </view>
+
+  <!-- 已报名过（防重复） -->
+  <view wx:elif="{{!checking && dupExists}}" class="card closed-card">
+    <text class="closed-icon">✅</text>
+    <text class="closed-title">你已提交过报名</text>
+    <text class="closed-desc">意向部门：{{dupDeptName || '未知'}}。每位同学限报一次，可在「我的」页面查看审核进度；如需修改请联系协会负责人，若报名被驳回可重新提交。</text>
+  </view>
+
+  <!-- 报名表单 -->
+  <view wx:else class="card form-card">
+    <view class="section-title">报名表</view>
+    <text class="form-tip">请填写真实信息，方便我们与你联系。</text>
+
+    <!-- 姓名 -->
+    <view class="form-row">
+      <text class="form-label"><text class="required">*</text>姓名</text>
+      <input class="form-input" type="text" placeholder="请输入真实姓名" placeholder-class="ph" value="{{form.name}}" bindinput="onInput" data-field="name" maxlength="20" />
+    </view>
+
+    <!-- 学号 -->
+    <view class="form-row">
+      <text class="form-label"><text class="required">*</text>学号</text>
+      <input class="form-input" type="text" placeholder="请输入学号" placeholder-class="ph" value="{{form.stuId}}" bindinput="onInput" data-field="stuId" maxlength="20" />
+    </view>
+
+    <!-- 学院 -->
+    <view class="form-row">
+      <text class="form-label"><text class="required">*</text>学院</text>
+      <input class="form-input" type="text" placeholder="例如：电子工程学院" placeholder-class="ph" value="{{form.college}}" bindinput="onInput" data-field="college" maxlength="40" />
+    </view>
+
+    <!-- 专业 -->
+    <view class="form-row">
+      <text class="form-label">专业</text>
+      <input class="form-input" type="text" placeholder="例如：通信工程" placeholder-class="ph" value="{{form.major}}" bindinput="onInput" data-field="major" maxlength="40" />
+    </view>
+
+    <!-- 手机号（手动输入：个人主体小程序微信未开放一键获取权限） -->
+    <view class="form-row">
+      <text class="form-label"><text class="required">*</text>手机号</text>
+      <input class="form-input" type="number" placeholder="请输入 11 位手机号" placeholder-class="ph" value="{{form.phone}}" bindinput="onInput" data-field="phone" maxlength="11" />
+      <text class="privacy-hint">* 用于招新联系，请确保手机号真实有效</text>
+    </view>
+
+    <!-- 意向部门 -->
+    <view class="form-row">
+      <text class="form-label"><text class="required">*</text>意向部门</text>
+      <picker mode="selector" range="{{deptNames}}" value="{{deptIndex}}" bindchange="onDeptChange">
+        <view class="form-picker {{form.deptName ? '' : 'placeholder'}}">
+          {{form.deptName || '请选择意向部门'}}
+          <text class="picker-arrow">▸</text>
+        </view>
+      </picker>
+    </view>
+
+    <!-- 自我介绍 -->
+    <view class="form-row">
+      <text class="form-label"><text class="required">*</text>自我介绍 / 报名理由</text>
+      <textarea class="form-textarea" placeholder="简单介绍你的性格、经历，以及想加入这个部门的原因" placeholder-class="ph" value="{{form.intro}}" bindinput="onInput" data-field="intro" maxlength="300" />
+      <text class="textarea-count">{{form.intro.length || 0}}/300</text>
+    </view>
+
+    <!-- 隐私授权 -->
+    <view class="privacy-row">
+      <checkbox class="privacy-check" checked="{{privacyAgree}}" bindtap="togglePrivacy" />
+      <text class="privacy-text">我已阅读并同意
+        <text class="privacy-link" bindtap="showPrivacy">《个人信息授权及隐私保护说明》</text>
+      </text>
+    </view>
+
+    <button class="btn-primary btn-submit" disabled="{{submitting || !privacyAgree}}" bindtap="submit">{{submitting ? '提交中…' : '提交报名'}}</button>
+  </view>
+
+  <view style="height:40rpx;"></view>
+</view>

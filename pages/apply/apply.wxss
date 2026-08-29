@@ -1,0 +1,131 @@
+/* pages/apply/apply.wxss */
+
+/* 报名未开放 / 已报名 提示卡 */
+.closed-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 80rpx 40rpx;
+}
+
+.closed-icon {
+  font-size: 88rpx;
+  margin-bottom: 24rpx;
+}
+
+.closed-title {
+  font-size: 34rpx;
+  font-weight: 700;
+  margin-bottom: 16rpx;
+}
+
+.closed-desc {
+  font-size: 26rpx;
+  color: var(--text-sub);
+  line-height: 1.7;
+}
+
+.form-card {
+  margin-top: 24rpx;
+}
+
+.form-tip {
+  display: block;
+  font-size: 26rpx;
+  color: var(--text-sub);
+  margin-bottom: 30rpx;
+}
+
+.form-row {
+  margin-bottom: 30rpx;
+}
+
+/* input 用固定高度 + 等值行高，保证文字垂直居中不被裁切；picker 同高协调 */
+.form-input,
+.form-picker {
+  width: 100%;
+  height: 88rpx;
+  line-height: 88rpx;
+  box-sizing: border-box;
+  background: #F8F9FA;
+  border-radius: 12rpx;
+  padding: 0 24rpx;
+  font-size: 30rpx;
+  color: var(--text);
+}
+
+.form-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  background: #F8F9FA;
+  border-radius: 12rpx;
+  padding: 22rpx 24rpx;
+  font-size: 30rpx;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+/* 原生 input/textarea 占位符必须用 placeholder-class，不能用 ::placeholder（iOS/Android 渲染不一致） */
+.ph,
+.form-picker.placeholder {
+  color: #B0B5BA;
+}
+
+.form-picker {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.picker-arrow {
+  color: var(--text-sub);
+  transform: rotate(90deg);
+}
+
+.privacy-hint {
+  display: block;
+  font-size: 22rpx;
+  color: var(--text-sub);
+  margin-top: 10rpx;
+}
+
+.form-textarea {
+  height: 220rpx;
+}
+
+.textarea-count {
+  display: block;
+  text-align: right;
+  font-size: 24rpx;
+  color: var(--text-sub);
+  margin-top: 8rpx;
+}
+
+.privacy-row {
+  display: flex;
+  align-items: flex-start;
+  margin: 40rpx 0 30rpx;
+}
+
+.privacy-check {
+  transform: scale(0.75);
+  transform-origin: left center;
+  margin-right: 8rpx;
+}
+
+.privacy-text {
+  flex: 1;
+  font-size: 26rpx;
+  color: var(--text-sub);
+  line-height: 1.5;
+}
+
+.privacy-link {
+  color: var(--primary);
+}
+
+.btn-submit {
+  height: 96rpx;
+  line-height: 96rpx;
+}

@@ -1,0 +1,15 @@
+{
+  "name": "exportExcel",
+  "version": "1.0.0",
+  "description": "校青协招新报名表导出为 Excel",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "wx-server-sdk": "latest",
+    "xlsx": "^0.18.5"
+  }
+}

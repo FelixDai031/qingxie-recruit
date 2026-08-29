@@ -1,0 +1,14 @@
+{
+  "name": "adminCheck",
+  "version": "1.0.0",
+  "description": "校青协招新管理员权限校验、审核与手机号解析",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "wx-server-sdk": "latest"
+  }
+}

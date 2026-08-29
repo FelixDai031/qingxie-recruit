@@ -1,0 +1,273 @@
+/* pages/index/index.wxss */
+
+/* 顶部 Banner */
+.hero {
+  background: linear-gradient(135deg, #FF5630, #FF8A50);
+  padding: 72rpx 48rpx 84rpx;
+  color: #FFFFFF;
+  border-radius: 0 0 40rpx 40rpx;
+  box-shadow: 0 12rpx 40rpx rgba(255, 86, 48, 0.25);
+}
+
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.hero-tag {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.22);
+  padding: 8rpx 24rpx;
+  border-radius: 999rpx;
+  font-size: 24rpx;
+  margin-bottom: 24rpx;
+}
+
+.hero-title {
+  font-size: 56rpx;
+  font-weight: 700;
+  letter-spacing: 4rpx;
+  margin-bottom: 12rpx;
+}
+
+.hero-sub {
+  font-size: 32rpx;
+  opacity: 0.96;
+  margin-bottom: 16rpx;
+}
+
+.hero-slogan {
+  font-size: 26rpx;
+  opacity: 0.85;
+  letter-spacing: 2rpx;
+}
+
+.hero-logos {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  width: 100%;
+  margin-bottom: 36rpx;
+}
+
+.hero-logo-school {
+  width: 200rpx;
+  height: 200rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 10rpx;
+  box-sizing: border-box;
+  box-shadow: 0 6rpx 20rpx rgba(0, 0, 0, 0.12);
+}
+
+.hero-logo-volunteer {
+  width: 136rpx;
+  height: 136rpx;
+  border-radius: 50%;
+  background: #FFFFFF;
+  padding: 14rpx;
+  box-sizing: border-box;
+  box-shadow: 0 6rpx 20rpx rgba(0, 0, 0, 0.12);
+}
+
+/* 区块容器 */
+.section {
+  margin-top: 44rpx;
+  padding: 0 24rpx;
+}
+
+.section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 24rpx;
+  padding: 0 8rpx;
+}
+
+.section-title {
+  font-size: 34rpx;
+  font-weight: 700;
+}
+
+.section-hint {
+  font-size: 24rpx;
+  color: var(--text-sub);
+}
+
+/* 部门网格 */
+.dept-grid {
+  display: flex;
+  flex-wrap: wrap;
+  margin: -8rpx;
+}
+
+.dept-card {
+  width: calc(50% - 16rpx);
+  margin: 8rpx;
+  box-sizing: border-box;
+  background: var(--card);
+  border-radius: 20rpx;
+  padding: 32rpx 20rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.1s;
+}
+
+.dept-card:active {
+  transform: scale(0.97);
+}
+
+.dept-icon {
+  font-size: 60rpx;
+  line-height: 1;
+  margin-bottom: 16rpx;
+}
+
+.dept-name {
+  font-size: 30rpx;
+  font-weight: 700;
+  margin-bottom: 8rpx;
+}
+
+.dept-slogan {
+  font-size: 22rpx;
+  color: var(--text-sub);
+  line-height: 1.4;
+  min-height: 62rpx;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+/* 招新流程 */
+.steps {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 8rpx 0;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.step-num {
+  width: 60rpx;
+  line-height: 60rpx;
+  text-align: center;
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  color: #FFFFFF;
+  border-radius: 50%;
+  font-size: 28rpx;
+  font-weight: 700;
+  margin-bottom: 14rpx;
+}
+
+.step-text {
+  font-size: 28rpx;
+  font-weight: 600;
+  margin-bottom: 6rpx;
+}
+
+.step-desc {
+  font-size: 22rpx;
+  color: var(--text-sub);
+}
+
+.step-line {
+  width: 56rpx;
+  height: 4rpx;
+  background: #E8E8EA;
+  border-radius: 2rpx;
+  margin-top: 30rpx;
+}
+
+/* FAQ */
+.faq-card {
+  padding-bottom: 16rpx;
+}
+
+.faq-item {
+  border-bottom: 1rpx solid #F0F0F0;
+  padding: 24rpx 0;
+}
+
+.faq-item:last-child {
+  border-bottom: none;
+}
+
+.faq-q {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 29rpx;
+  font-weight: 600;
+}
+
+.faq-arrow {
+  color: var(--text-sub);
+  margin-left: 16rpx;
+  transition: transform 0.2s;
+}
+
+.faq-arrow.open {
+  transform: rotate(180deg);
+}
+
+.faq-a {
+  margin-top: 16rpx;
+  font-size: 27rpx;
+  color: var(--text-sub);
+  line-height: 1.6;
+}
+
+/* 志愿风采 */
+.photo-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.activity-photo {
+  width: 100%;
+  height: 360rpx;
+  display: block;
+}
+
+.photo-caption {
+  padding: 26rpx;
+}
+
+.photo-title {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 700;
+  margin-bottom: 10rpx;
+}
+
+.photo-desc {
+  display: block;
+  font-size: 25rpx;
+  color: var(--text-sub);
+  line-height: 1.5;
+}
+
+.loading {
+  text-align: center;
+  color: var(--text-sub);
+  padding: 60rpx 0;
+}
+
+.footer {
+  text-align: center;
+  font-size: 24rpx;
+  color: var(--text-sub);
+  padding: 48rpx 0 56rpx;
+}

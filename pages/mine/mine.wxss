@@ -1,0 +1,336 @@
+/* pages/mine/mine.wxss */
+
+.user-card {
+  background: linear-gradient(135deg, #FF5630, #FF8A50);
+  border-radius: 0 0 40rpx 40rpx;
+  padding: 60rpx 40rpx 80rpx;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  gap: 28rpx;
+  box-shadow: 0 12rpx 40rpx rgba(255, 86, 48, 0.25);
+}
+
+.user-avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: block;
+}
+
+.avatar-fallback {
+  font-size: 60rpx;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+  flex: 1;
+  min-width: 0;
+}
+
+.user-name {
+  font-size: 40rpx;
+  font-weight: 700;
+}
+
+.user-id {
+  font-size: 24rpx;
+  opacity: 0.9;
+}
+
+.logout-btn {
+  font-size: 24rpx;
+  padding: 10rpx 24rpx;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 999rpx;
+  flex-shrink: 0;
+}
+
+.login-arrow {
+  font-size: 36rpx;
+  opacity: 0.8;
+  flex-shrink: 0;
+}
+
+/* ===== 登录弹窗 ===== */
+.login-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-panel {
+  width: 620rpx;
+  max-width: 88vw;
+  max-height: 80vh;
+  overflow-y: auto;
+  background: #FFFFFF;
+  border-radius: 28rpx;
+  padding: 56rpx 48rpx 44rpx;
+  display: flex;
+  flex-direction: column;
+  /* stretch：所有直接子元素统一占满内容宽，杜绝输入框/按钮超出或错位 */
+  align-items: stretch;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.login-title {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.login-desc {
+  font-size: 24rpx;
+  color: var(--text-sub);
+  margin-top: 10rpx;
+  margin-bottom: 40rpx;
+}
+
+.avatar-picker {
+  /* 用 min/max 双重锁死尺寸，防止 button 组件默认样式在不同机型上把圆撑变形 */
+  width: 160rpx;
+  height: 160rpx;
+  min-width: 160rpx;
+  max-width: 160rpx;
+  min-height: 160rpx;
+  max-height: 160rpx;
+  box-sizing: border-box;
+  flex: none;
+  border-radius: 50%;
+  padding: 0;
+  /* panel 为 stretch 布局，用 auto margin 让头像在整行内居中 */
+  margin: 0 auto;
+  background: #F5F6F7;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  line-height: 1;
+  font-size: 0;
+}
+.avatar-picker::after {
+  border: none;
+}
+
+.picker-img {
+  width: 160rpx;
+  height: 160rpx;
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 50%;
+  display: block;
+  flex: none;
+}
+
+.login-panel form {
+  width: 100%;
+  box-sizing: border-box;
+  display: block;
+}
+
+.picker-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6rpx;
+  width: 140rpx;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.picker-icon {
+  font-size: 44rpx;
+  line-height: 1;
+  flex: none;
+}
+
+.picker-text {
+  font-size: 20rpx;
+  color: var(--text-sub);
+  text-align: center;
+  line-height: 1.4;
+  white-space: normal;
+  word-break: break-all;
+}
+
+.nick-row {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 44rpx;
+}
+
+.nick-input {
+  width: 100%;
+  max-width: 100%;
+  height: 88rpx;
+  min-height: 88rpx;
+  max-height: 88rpx;
+  background: #F5F6F7;
+  border-radius: 16rpx;
+  padding: 0 24rpx;
+  font-size: 30rpx;
+  box-sizing: border-box;
+}
+
+/* iOS 占位符兼容：用 placeholder-class 而非 ::placeholder */
+.ph {
+  color: #B0B5BA;
+}
+
+.login-actions {
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20rpx;
+  margin-top: 44rpx;
+}
+
+.btn-cancel {
+  flex: 1;
+  height: 88rpx;
+  line-height: 88rpx;
+  background: #F5F6F7;
+  color: var(--text-sub);
+  border-radius: 48rpx;
+  font-size: 30rpx;
+  border: none;
+  padding: 0;
+}
+.btn-cancel::after {
+  border: none;
+}
+
+.btn-confirm {
+  flex: 1;
+  min-width: 0;
+  height: 88rpx;
+  line-height: 88rpx;
+  border: none;
+  padding: 0;
+}
+.btn-confirm::after {
+  border: none;
+}
+
+/* ===== 报名列表 ===== */
+.apply-card {
+  margin-top: -40rpx;
+}
+
+.section-title {
+  font-size: 34rpx;
+  font-weight: 700;
+  margin-bottom: 24rpx;
+}
+
+.apply-item {
+  background: #FAFAFA;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+}
+
+.apply-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.apply-dept {
+  font-size: 32rpx;
+  font-weight: 700;
+}
+
+.apply-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+  font-size: 26rpx;
+  color: var(--text-sub);
+}
+
+.loading {
+  text-align: center;
+  color: var(--text-sub);
+  padding: 60rpx;
+}
+
+.empty {
+  text-align: center;
+  padding: 80rpx 40rpx;
+}
+
+.empty-icon {
+  font-size: 96rpx;
+  display: block;
+  margin-bottom: 20rpx;
+}
+
+.btn-empty {
+  width: 280rpx;
+  height: 84rpx;
+  line-height: 84rpx;
+  margin-top: 40rpx;
+}
+
+.admin-entry {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24rpx;
+}
+
+.admin-title {
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.admin-arrow {
+  color: var(--text-sub);
+}
+
+.admin-apply {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24rpx;
+}
+.admin-apply-main {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+  flex: 1;
+  min-width: 0;
+}
+.admin-sub {
+  font-size: 24rpx;
+  color: var(--text-sub);
+}

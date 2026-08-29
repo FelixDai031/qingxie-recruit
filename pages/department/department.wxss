@@ -1,0 +1,101 @@
+/* pages/department/department.wxss */
+
+.dept-hero {
+  border-radius: 0 0 40rpx 40rpx;
+  padding: 60rpx 40rpx 80rpx;
+  color: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 12rpx 40rpx rgba(255, 86, 48, 0.25);
+}
+
+.dept-hero-icon {
+  font-size: 120rpx;
+  margin-bottom: 16rpx;
+}
+
+.dept-hero-name {
+  font-size: 48rpx;
+  font-weight: 700;
+  margin-bottom: 12rpx;
+}
+
+.dept-hero-slogan {
+  font-size: 28rpx;
+  opacity: 0.95;
+}
+
+.dept-intro {
+  margin-top: -40rpx;
+}
+
+.intro-text {
+  font-size: 29rpx;
+  color: var(--text);
+  line-height: 1.7;
+}
+
+/* 活动相册：3 列网格 */
+.album-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+}
+
+.album-img {
+  width: 210rpx;
+  height: 210rpx;
+  border-radius: 12rpx;
+  display: block;
+  background: #F0F1F2;
+}
+
+.section-title {
+  font-size: 34rpx;
+  font-weight: 700;
+  margin-bottom: 24rpx;
+}
+
+.list-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 18rpx;
+  font-size: 29rpx;
+  line-height: 1.5;
+}
+
+.list-dot {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+  background: #D0D0D0;
+  margin-right: 18rpx;
+  margin-top: 14rpx;
+  flex-shrink: 0;
+}
+
+.list-dot-primary {
+  background: var(--primary);
+}
+
+.list-text {
+  flex: 1;
+  color: var(--text);
+}
+
+.dept-footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 20rpx 40rpx calc(20rpx + env(safe-area-inset-bottom));
+  background: #FFFFFF;
+  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.05);
+}
+
+.btn-apply {
+  height: 96rpx;
+  line-height: 96rpx;
+}

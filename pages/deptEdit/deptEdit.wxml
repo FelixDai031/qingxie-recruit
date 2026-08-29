@@ -1,0 +1,49 @@
+<view class="page-edit">
+  <!-- 步骤一：选择部门 -->
+  <view class="card">
+    <view class="field-label">选择部门</view>
+    <picker mode="selector" range="{{deptNames}}" value="{{deptIndex}}" bindchange="onPickDept">
+      <view class="picker-box">
+        <text class="{{deptIndex >= 0 ? '' : 'picker-ph'}}">{{deptIndex >= 0 ? deptNames[deptIndex] : '请选择要编辑的部门'}}</text>
+        <text class="picker-arrow">▾</text>
+      </view>
+    </picker>
+  </view>
+
+  <!-- 步骤二：编辑表单（选中部门后才显示） -->
+  <block wx:if="{{deptId}}">
+    <view class="card">
+      <view class="field-label">部门标语</view>
+      <input class="field-input" placeholder="一句话介绍部门，如：统筹全局，服务全员" maxlength="50" value="{{slogan}}" bindinput="onSloganInput" />
+      <text class="counter">{{slogan.length}}/50</text>
+    </view>
+
+    <view class="card">
+      <view class="field-label">部门简介</view>
+      <textarea class="field-textarea" placeholder="填写部门简介，向报名同学介绍部门职责与特色" maxlength="500" value="{{intro}}" bindinput="onIntroInput" auto-height />
+      <text class="counter">{{intro.length}}/500</text>
+    </view>
+
+    <!-- 活动相册管理 -->
+    <view class="card">
+      <view class="field-label">活动相册</view>
+      <view class="photo-hint">照片将展示在部门详情页，供报名同学了解部门活动（最多 20 张）。</view>
+      <view class="photo-grid">
+        <view wx:for="{{photos}}" wx:key="*this" class="photo-cell">
+          <image class="photo-img" src="{{item}}" mode="aspectFill" />
+          <view class="photo-del" catchtap="removePhoto" data-id="{{item}}">×</view>
+        </view>
+        <view wx:if="{{photos.length < 20}}" class="photo-cell photo-add {{uploading ? 'uploading' : ''}}" catchtap="addPhoto">
+          <text class="photo-add-icon">{{uploading ? '⬆' : '+'}}</text>
+          <text class="photo-add-text">{{uploading ? '上传中' : '添加照片'}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="tip">修改后将在小程序部门详情页实时生效，仅管理员可编辑。</view>
+
+    <button class="btn-save" bindtap="save" loading="{{saving}}">保存修改</button>
+  </block>
+
+  <view wx:else class="empty-tip">请先在上方选择一个部门</view>
+</view>

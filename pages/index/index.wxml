@@ -1,0 +1,95 @@
+<view class="page-index">
+  <!-- 顶部 Banner -->
+  <view class="hero">
+    <view class="hero-content">
+      <view class="hero-logos">
+        <image class="hero-logo-school" src="/images/hero/xiyou-badge.png" mode="aspectFit" />
+        <image class="hero-logo-volunteer" src="/images/hero/xinshou-logo.png" mode="aspectFit" />
+      </view>
+      <text class="hero-tag">{{recruitTag}}</text>
+      <text class="hero-title">西安邮电大学</text>
+      <text class="hero-sub">校青年志愿者协会</text>
+      <text class="hero-slogan">心怀热忱 · 乐于奉献 · 收获成长</text>
+    </view>
+  </view>
+
+  <!-- 部门列表 -->
+  <view class="section">
+    <view class="section-head">
+      <text class="section-title">选择感兴趣的部门</text>
+      <text class="section-hint">点击卡片查看详情</text>
+    </view>
+    <view wx:if="{{loading}}" class="loading">部门加载中…</view>
+    <view wx:else class="dept-grid">
+      <view wx:for="{{departments}}" wx:key="_id" class="dept-card" bindtap="goDept" data-id="{{item._id}}">
+        <view class="dept-icon">{{item.icon}}</view>
+        <view class="dept-name">{{item.name}}</view>
+        <view class="dept-slogan">{{item.slogan}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 招新流程 -->
+  <view class="section">
+    <view class="section-head">
+      <text class="section-title">招新流程</text>
+      <text class="section-hint">三步加入我们</text>
+    </view>
+    <view class="card">
+      <view class="steps">
+        <view class="step">
+          <view class="step-num">1</view>
+          <text class="step-text">浏览部门</text>
+          <text class="step-desc">找到心仪的部门</text>
+        </view>
+        <view class="step-line"></view>
+        <view class="step">
+          <view class="step-num">2</view>
+          <text class="step-text">在线报名</text>
+          <text class="step-desc">填写报名信息</text>
+        </view>
+        <view class="step-line"></view>
+        <view class="step">
+          <view class="step-num">3</view>
+          <text class="step-text">等待通知</text>
+          <text class="step-desc">关注审核结果</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 常见问题 -->
+  <view class="section">
+    <view class="section-head">
+      <text class="section-title">常见问题</text>
+      <text class="section-hint">点按展开</text>
+    </view>
+    <view class="card faq-card">
+      <view wx:for="{{faqList}}" wx:key="index" class="faq-item" bindtap="toggleFaq" data-index="{{index}}">
+        <view class="faq-q">
+          <text>Q：{{item.q}}</text>
+          <text class="faq-arrow {{item.open ? 'open' : ''}}">▾</text>
+        </view>
+        <view wx:if="{{item.open}}" class="faq-a">{{item.a}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 志愿风采 -->
+  <view class="section">
+    <view class="section-head">
+      <text class="section-title">志愿风采</text>
+      <text class="section-hint">我们在行动</text>
+    </view>
+    <view class="card photo-card">
+      <image class="activity-photo" src="/images/hero/activity-sanxiaxiang.jpg" mode="aspectFill" />
+      <view class="photo-caption">
+        <text class="photo-title">暑期“三下乡”社会实践出征仪式</text>
+        <text class="photo-desc">西邮青年志愿者奔赴基层，用青春力量服务社会，在实践中收获成长。</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部 -->
+  <view class="footer">西安邮电大学青年志愿者协会 · 期待你的加入</view>
+</view>

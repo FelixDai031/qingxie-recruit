@@ -1,0 +1,33 @@
+<view class="page-detail">
+  <view wx:if="{{loading}}" class="loading">加载中…</view>
+
+  <block wx:elif="{{item}}">
+    <view class="card">
+      <view class="detail-header">
+        <text class="detail-dept">{{item.deptName}}</text>
+        <text class="badge {{item.status === 'pending' ? 'badge-pending' : (item.status === 'pass' ? 'badge-pass' : 'badge-wait')}}">{{item.statusText}}</text>
+      </view>
+
+      <view class="info-list">
+        <text>姓名：{{item.name}}</text>
+        <text>学号：{{item.stuId}}</text>
+        <text>学院：{{item.college}}</text>
+        <text wx:if="{{item.major}}">专业：{{item.major}}</text>
+        <text>手机：{{item.phone}}</text>
+        <text>提交：{{item.timeText}}</text>
+      </view>
+
+      <view class="intro-box">
+        <text class="intro-label">自我介绍</text>
+        <text class="intro-text">{{item.intro}}</text>
+      </view>
+    </view>
+
+    <view wx:if="{{item.status === 'pending'}}" class="action-bar">
+      <button class="btn-pass" catchtap="review" data-id="{{item._id}}" data-status="pass" data-dept="{{item.deptName}}" data-openid="{{item._openid}}">通过</button>
+      <button class="btn-wait" catchtap="review" data-id="{{item._id}}" data-status="wait" data-dept="{{item.deptName}}" data-openid="{{item._openid}}">待定</button>
+    </view>
+
+    <view style="height:40rpx;"></view>
+  </block>
+</view>

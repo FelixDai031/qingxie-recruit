@@ -1,0 +1,680 @@
+/* pages/admin/admin.wxss */
+
+.page-admin {
+  min-height: 100vh;
+}
+
+/* 通用按钮按压态（hover-class 调用） */
+.btn-hover {
+  opacity: 0.88;
+  transform: translateY(2rpx);
+}
+
+/* ===== 顶部功能切换（分段标签） ===== */
+.admin-tabs {
+  display: flex;
+  gap: 8rpx;
+  background: #EDEEF0;
+  border-radius: 16rpx;
+  padding: 8rpx;
+  margin: 20rpx 24rpx 0;
+}
+
+.admin-tab {
+  flex: 1;
+  text-align: center;
+  padding: 18rpx 0;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  color: var(--text-sub);
+  transition: all 0.15s ease;
+}
+
+.admin-tab.active {
+  background: #FFFFFF;
+  color: var(--primary);
+  font-weight: 700;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.06);
+}
+
+/* ===== 部门权限范围提示 ===== */
+.scope-tip {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  margin: 16rpx 24rpx 0;
+  padding: 14rpx 20rpx;
+  background: #FFF7F4;
+  border: 2rpx solid #FFD9CC;
+  border-radius: 12rpx;
+}
+
+.scope-icon {
+  font-size: 26rpx;
+}
+
+.scope-text {
+  flex: 1;
+  font-size: 24rpx;
+  color: #C25A3A;
+  line-height: 1.5;
+}
+
+/* ===== 添加管理员 · 部门勾选 ===== */
+.dept-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14rpx;
+  margin-bottom: 14rpx;
+}
+
+.dept-chip {
+  padding: 10rpx 26rpx;
+  border-radius: 999rpx;
+  background: #F5F6F7;
+  color: var(--text-sub);
+  font-size: 24rpx;
+  border: 2rpx solid transparent;
+  transition: all 0.15s ease;
+}
+
+.dept-chip.checked {
+  background: #FFF1EC;
+  color: var(--primary);
+  border-color: var(--primary);
+  font-weight: 600;
+}
+
+.add-admin-hint {
+  font-size: 22rpx;
+  color: var(--text-sub);
+  margin-bottom: 16rpx;
+}
+
+/* ===== 管理员申请审批 ===== */
+.admin-req-card {
+  margin-top: 20rpx;
+  margin-bottom: 20rpx;
+  border: 2rpx solid #FFE0D1;
+}
+
+.admin-req-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+  padding: 18rpx 0;
+  border-top: 2rpx solid #F0F1F2;
+}
+
+.admin-req-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+
+.admin-req-id {
+  font-size: 26rpx;
+  color: var(--text);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.admin-req-time {
+  font-size: 22rpx;
+  color: var(--text-sub);
+}
+
+.admin-req-btns {
+  flex: none;
+  display: flex;
+  gap: 14rpx;
+}
+
+.req-btn {
+  width: 110rpx;
+  height: 64rpx;
+  line-height: 64rpx;
+  font-size: 26rpx;
+  font-weight: 600;
+  border-radius: 12rpx;
+  padding: 0;
+  border: none;
+}
+
+.req-btn::after {
+  border: none;
+}
+
+.req-approve {
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  color: #FFFFFF;
+}
+
+.req-reject {
+  background: #F5F6F7;
+  color: var(--text-sub);
+}
+
+/* 开启申请提醒按钮 */
+.btn-notify {
+  margin-top: 20rpx;
+  width: 100%;
+  height: 80rpx;
+  line-height: 80rpx;
+  background: #FFFFFF;
+  color: var(--primary);
+  font-size: 27rpx;
+  font-weight: 600;
+  border-radius: 14rpx;
+  border: 2rpx solid var(--primary);
+  padding: 0;
+}
+
+.btn-notify::after {
+  border: none;
+}
+
+/* ===== 审核总览（统计看板） ===== */
+.stats-card {
+  margin-top: 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.stats-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+}
+
+.stats-total {
+  font-size: 24rpx;
+  color: var(--text-sub);
+}
+
+.stats-grid {
+  display: flex;
+  gap: 16rpx;
+}
+
+.stat-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20rpx 0;
+  background: #FAFAFB;
+  border-radius: 14rpx;
+}
+
+.stat-num {
+  font-size: 40rpx;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.stat-label {
+  margin-top: 6rpx;
+  font-size: 22rpx;
+  color: var(--text-sub);
+}
+
+.num-pending { color: #E68A00; }
+.num-pass { color: #07A653; }
+.num-wait { color: #1A73E8; }
+.num-reject { color: #D93025; }
+
+/* 各部门报名排行 */
+.dept-stats {
+  margin-top: 24rpx;
+  padding-top: 20rpx;
+  border-top: 2rpx solid #F0F1F2;
+}
+
+.dept-stats-title {
+  font-size: 24rpx;
+  color: var(--text-sub);
+  margin-bottom: 14rpx;
+}
+
+.dept-stat-row {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin-bottom: 12rpx;
+}
+
+.ds-name {
+  flex: none;
+  width: 150rpx;
+  font-size: 24rpx;
+  color: var(--text);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.ds-bar-wrap {
+  flex: 1;
+  height: 20rpx;
+  background: #F0F1F2;
+  border-radius: 999rpx;
+  overflow: hidden;
+}
+
+.ds-bar {
+  height: 100%;
+  min-width: 8rpx;
+  background: linear-gradient(90deg, var(--primary), var(--primary-light));
+  border-radius: 999rpx;
+  transition: width 0.3s ease;
+}
+
+.ds-count {
+  flex: none;
+  width: 56rpx;
+  text-align: right;
+  font-size: 24rpx;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* ===== 招新设置（报名开关） ===== */
+.recruit-setting-card {
+  margin-bottom: 20rpx;
+}
+
+.recruit-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20rpx;
+}
+
+.recruit-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.recruit-info .add-admin-desc {
+  margin-bottom: 0;
+}
+
+/* ===== 驳回 / 撤销按钮 ===== */
+.btn-reject {
+  background: #FFFFFF;
+  color: var(--danger);
+  border: 2rpx solid #F5B5B0 !important;
+}
+
+.btn-reset {
+  background: #F5F6F7;
+  color: var(--text-sub);
+}
+
+/* ===== 筛选栏 ===== */
+.filter-bar {
+  display: flex;
+  padding: 20rpx 24rpx;
+  gap: 16rpx;
+  background: #FFFFFF;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.04);
+}
+
+.filter-item {
+  position: relative;
+  flex: 1;
+  text-align: center;
+  padding: 16rpx 0;
+  border-radius: 14rpx;
+  font-size: 28rpx;
+  color: var(--text-sub);
+  background: #F5F6F7;
+  transition: all 0.15s ease;
+}
+
+.filter-item.active {
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  color: #FFFFFF;
+  font-weight: 600;
+  box-shadow: 0 6rpx 16rpx rgba(255, 86, 48, 0.28);
+}
+
+/* 待审核数量角标 */
+.filter-badge {
+  position: absolute;
+  top: -12rpx;
+  right: -6rpx;
+  min-width: 32rpx;
+  height: 32rpx;
+  line-height: 32rpx;
+  padding: 0 8rpx;
+  border-radius: 999rpx;
+  background: var(--danger);
+  color: #FFFFFF;
+  font-size: 20rpx;
+  font-weight: 700;
+  box-shadow: 0 4rpx 8rpx rgba(250, 81, 81, 0.35);
+}
+
+/* ===== 报名卡片（按状态显示左侧色条） ===== */
+.apply-card {
+  margin-top: 20rpx;
+  border-left: 6rpx solid transparent;
+}
+
+.apply-card.st-pending { border-left-color: #FF9F0A; }
+.apply-card.st-pass { border-left-color: #07C160; }
+.apply-card.st-wait { border-left-color: #1A73E8; }
+.apply-card.st-reject { border-left-color: #FA5151; }
+
+.apply-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.apply-dept {
+  flex: 1;
+  min-width: 0;
+  margin-right: 12rpx;
+  font-size: 32rpx;
+  font-weight: 700;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+  font-size: 27rpx;
+  color: var(--text-sub);
+  margin-bottom: 20rpx;
+}
+
+.intro-box {
+  background: #FAFAFA;
+  border-radius: 14rpx;
+  padding: 20rpx;
+  margin-bottom: 24rpx;
+}
+
+.intro-label {
+  display: block;
+  font-size: 26rpx;
+  font-weight: 600;
+  margin-bottom: 10rpx;
+}
+
+.intro-text {
+  font-size: 27rpx;
+  color: var(--text);
+  line-height: 1.6;
+  /* 强制在框内换行，避免超长无空格串横向溢出 */
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+/* 列表默认收起：最多显示 2 行，超出省略 */
+.intro-text.collapsed {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.intro-toggle {
+  display: inline-block;
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  color: var(--primary);
+}
+
+.detail-hint {
+  margin-top: 20rpx;
+  text-align: right;
+  font-size: 24rpx;
+  color: var(--text-sub);
+}
+
+/* 选择圆点 */
+.select-dot {
+  flex: none;
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  border: 2rpx solid #C9CDD1;
+  background: #FFFFFF;
+  color: #FFFFFF;
+  font-size: 26rpx;
+  line-height: 40rpx;
+  text-align: center;
+}
+
+.select-dot.selected {
+  background: var(--primary);
+  border-color: var(--primary);
+  box-shadow: 0 4rpx 10rpx rgba(255, 86, 48, 0.3);
+}
+
+/* ===== 导出 / 选择 操作栏 ===== */
+.export-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+  padding: 16rpx 24rpx 4rpx;
+}
+
+.export-info {
+  display: flex;
+  align-items: center;
+  gap: 18rpx;
+  font-size: 26rpx;
+  color: var(--text-sub);
+}
+
+.sel-count {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.sel-all {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.sel-cancel {
+  color: var(--text-sub);
+  font-weight: 600;
+}
+
+/* 主操作按钮（实心渐变） */
+.btn-export {
+  flex: 1;
+  max-width: 460rpx;
+  height: 84rpx;
+  line-height: 84rpx;
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  color: #FFFFFF;
+  font-size: 29rpx;
+  font-weight: 600;
+  border-radius: 16rpx;
+  padding: 0;
+  box-shadow: 0 8rpx 18rpx rgba(255, 86, 48, 0.22);
+}
+
+.btn-export::after {
+  border: none;
+}
+
+/* 次操作按钮（描边胶囊） */
+.btn-mode {
+  flex: none;
+  width: 170rpx;
+  height: 84rpx;
+  line-height: 84rpx;
+  background: #FFFFFF;
+  color: var(--primary);
+  font-size: 28rpx;
+  font-weight: 600;
+  border-radius: 16rpx;
+  border: 2rpx solid var(--primary);
+  padding: 0;
+}
+
+.btn-mode::after {
+  border: none;
+}
+
+/* ===== 审核按钮（通过 / 待定） ===== */
+.action-bar {
+  display: flex;
+  gap: 20rpx;
+  margin-top: 4rpx;
+}
+
+.action-bar button {
+  flex: 1;
+  border-radius: 16rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  height: 84rpx;
+  line-height: 84rpx;
+  border: none;
+}
+
+.action-bar button::after {
+  border: none;
+}
+
+/* 通过：绿色实心，主操作 */
+.btn-pass {
+  background: linear-gradient(135deg, #07C160, #2BD47E);
+  color: #FFFFFF;
+  box-shadow: 0 8rpx 18rpx rgba(7, 193, 96, 0.24);
+}
+
+/* 待定：浅底描边，次操作 */
+.btn-wait {
+  background: #FFFFFF;
+  color: var(--text);
+  border: 2rpx solid #E2E5E9 !important;
+}
+
+/* ===== 添加管理员 ===== */
+.add-admin-card {
+  margin-bottom: 20rpx;
+}
+
+.add-admin-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  margin-bottom: 10rpx;
+}
+
+.add-admin-desc {
+  font-size: 24rpx;
+  color: var(--text-sub);
+  line-height: 1.6;
+  margin-bottom: 20rpx;
+}
+
+.add-admin-row {
+  display: flex;
+  gap: 16rpx;
+  align-items: center;
+}
+
+.add-admin-input {
+  flex: 1;
+  height: 84rpx;
+  background: #F5F6F7;
+  border-radius: 16rpx;
+  padding: 0 24rpx;
+  font-size: 28rpx;
+  box-sizing: border-box;
+  border: 2rpx solid transparent;
+}
+
+.add-admin-input:focus {
+  border-color: var(--primary);
+  background: #FFF7F4;
+}
+
+.add-admin-btn {
+  width: 170rpx;
+  height: 84rpx;
+  line-height: 84rpx;
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  color: #FFFFFF;
+  font-size: 28rpx;
+  font-weight: 600;
+  border-radius: 16rpx;
+  border: none;
+  padding: 0;
+  flex-shrink: 0;
+  box-shadow: 0 8rpx 18rpx rgba(255, 86, 48, 0.22);
+}
+
+.add-admin-btn::after {
+  border: none;
+}
+
+.add-admin-msg {
+  margin-top: 16rpx;
+  font-size: 24rpx;
+  color: var(--text-sub);
+}
+
+/* ===== 部门简介管理（醒目入口） ===== */
+.dept-manage-card {
+  margin-bottom: 20rpx;
+}
+
+.btn-enter-edit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 96rpx;
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  color: #FFFFFF;
+  font-size: 31rpx;
+  font-weight: 700;
+  letter-spacing: 1rpx;
+  border-radius: 16rpx;
+  border: none;
+  padding: 0;
+  box-shadow: 0 10rpx 22rpx rgba(255, 86, 48, 0.26);
+}
+
+.btn-enter-edit::after {
+  border: none;
+}
+
+/* 进入编辑按钮内的箭头图标 */
+.enter-arrow {
+  margin-left: 12rpx;
+  font-size: 36rpx;
+  font-weight: 400;
+  line-height: 1;
+  transform: translateY(2rpx);
+}
+
+/* ===== 加载态 ===== */
+.loading {
+  text-align: center;
+  color: var(--text-sub);
+  padding: 80rpx;
+}

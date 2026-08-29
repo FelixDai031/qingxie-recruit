@@ -1,0 +1,47 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/department/department",
+    "pages/apply/apply",
+    "pages/mine/mine",
+    "pages/admin/admin",
+    "pages/adminDetail/adminDetail",
+    "pages/deptEdit/deptEdit"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#FF5630",
+    "navigationBarTitleText": "校青协招新",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#F5F6F7",
+    "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "color": "#9AA0A6",
+    "selectedColor": "#FF5630",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "images/tab/home.png",
+        "selectedIconPath": "images/tab/home-active.png"
+      },
+      {
+        "pagePath": "pages/apply/apply",
+        "text": "报名",
+        "iconPath": "images/tab/apply.png",
+        "selectedIconPath": "images/tab/apply-active.png"
+      },
+      {
+        "pagePath": "pages/mine/mine",
+        "text": "我的",
+        "iconPath": "images/tab/mine.png",
+        "selectedIconPath": "images/tab/mine-active.png"
+      }
+    ]
+  },
+  "style": "v2",
+  "lazyCodeLoading": "requiredComponents",
+  "sitemapLocation": "sitemap.json"
+}

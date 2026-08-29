@@ -1,0 +1,56 @@
+<view class="page-dept">
+  <!-- 顶部头图区 -->
+  <view class="dept-hero" style="background: linear-gradient(135deg, #FF5630, #FF8A50);">
+    <text class="dept-hero-icon">{{dept.icon}}</text>
+    <text class="dept-hero-name">{{dept.name}}</text>
+    <text class="dept-hero-slogan">{{dept.slogan}}</text>
+  </view>
+
+  <!-- 简介 -->
+  <view class="card dept-intro">
+    <view class="section-title">部门简介</view>
+    <text class="intro-text">{{dept.intro}}</text>
+  </view>
+
+  <!-- 活动相册 -->
+  <view wx:if="{{dept.photos.length}}" class="card">
+    <view class="section-title">活动相册</view>
+    <view class="album-grid">
+      <image
+        wx:for="{{dept.photos}}"
+        wx:key="*this"
+        class="album-img"
+        src="{{item}}"
+        mode="aspectFill"
+        bindtap="previewPhoto"
+        data-index="{{index}}"
+      />
+    </view>
+  </view>
+
+  <!-- 职责 -->
+  <view class="card">
+    <view class="section-title">核心职责</view>
+    <view wx:for="{{dept.duties}}" wx:key="index" class="list-item">
+      <text class="list-dot"></text>
+      <text class="list-text">{{item}}</text>
+    </view>
+  </view>
+
+  <!-- 招新要求 -->
+  <view class="card">
+    <view class="section-title">招新要求</view>
+    <view wx:for="{{dept.requirements}}" wx:key="index" class="list-item">
+      <text class="list-dot list-dot-primary"></text>
+      <text class="list-text">{{item}}</text>
+    </view>
+  </view>
+
+  <!-- 底部占位，给固定按钮留空间 -->
+  <view style="height:160rpx;"></view>
+
+  <!-- 底部报名按钮 -->
+  <view class="dept-footer">
+    <button class="btn-primary btn-apply" bindtap="goApply">立即报名 {{dept.name}}</button>
+  </view>
+</view>
