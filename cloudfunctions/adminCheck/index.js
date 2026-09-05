@@ -208,15 +208,12 @@ exports.main = async (event, context) => {
   }
   const allowedNames = await getAllowedDeptNames(adminRec);
 
-  // 4. 列出报名（部门管理员只能看到自己部门的报名）
+  // 4. 列出报名（所有管理员都能看到全部部门的报名）
   if (action === 'list') {
     const { filter } = event;
     let where = {};
     if (filter && filter !== 'all') {
       where.status = filter;
-    }
-    if (allowedNames) {
-      where.deptName = _.in(allowedNames);
     }
     const { data } = await db.collection('applications')
       .where(where)
@@ -225,15 +222,12 @@ exports.main = async (event, context) => {
     return { ok: true, data };
   }
 
-  // 4.5 查询单条报名详情（供详情页使用，校验部门权限）
+  // 4.5 查询单条报名详情（所有管理员都能查看任意部门的报名）
   if (action === 'detail') {
     const { id } = event;
     if (!id) return { ok: false, msg: '缺少 id' };
     try {
       const res = await db.collection('applications').doc(id).get();
-      if (!nameAllowed(allowedNames, res.data && res.data.deptName)) {
-        return { ok: false, msg: '无该部门的管理权限' };
-      }
       return { ok: true, data: res.data };
     } catch (err) {
       console.error('detail error', err);
@@ -241,7 +235,7 @@ exports.main = async (event, context) => {
     }
   }
 
-  // 5. 更新审核状态（校验部门权限）
+  // 5. 更新审核状态（所有管理员都能审核任意部门的报名）
   if (action === 'update') {
     const { id, status, statusText } = event;
     if (!id || !status) return { ok: false, msg: '参数缺失' };
@@ -249,9 +243,6 @@ exports.main = async (event, context) => {
     let rec;
     try {
       rec = await db.collection('applications').doc(id).get();
-      if (!nameAllowed(allowedNames, rec.data && rec.data.deptName)) {
-        return { ok: false, msg: '无该部门的管理权限' };
-      }
     } catch (err) {
       return { ok: false, msg: '报名记录不存在' };
     }
@@ -342,18 +333,18 @@ exports.main = async (event, context) => {
     }
   }
 
-  // 5.7 报名统计（管理员）：按状态 + 按部门（部门管理员仅统计自己部门）
+  // 5.7 报名统计（管理员）：所有管理员都看到全局统计
   if (action === 'stats') {
     try {
       const $ = db.command.aggregate;
       const statusRes = await db.collection('applications')
         .aggregate()
-        .match(allowedNames ? { deptName: _.in(allowedNames) } : {})
+        .match({})
         .group({ _id: '$status', count: $.sum(1) })
         .end();
       const deptRes = await db.collection('applications')
         .aggregate()
-        .match(allowedNames ? { deptName: _.in(allowedNames) } : {})
+        .match({})
         .group({ _id: '$deptName', count: $.sum(1) })
         .end();
       const byStatus = {};

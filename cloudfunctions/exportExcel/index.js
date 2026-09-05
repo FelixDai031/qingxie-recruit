@@ -14,24 +14,10 @@ exports.main = async (event, context) => {
       return { ok: false, msg: '未能获取用户身份，请重新登录' };
     }
 
-    // 仅管理员可导出；部门管理员只能导出自己部门的报名
+    // 仅管理员可导出；所有管理员都能导出全部报名
     const adminRes = await db.collection('admins').where({ openid: OPENID }).get();
     if (!adminRes.data || adminRes.data.length === 0) {
       return { ok: false, msg: '无管理员权限' };
-    }
-    const adminRec = adminRes.data[0];
-    const adminDeptIds = (adminRec && Array.isArray(adminRec.deptIds)) ? adminRec.deptIds : [];
-    let allowedNames = null;
-    if (adminDeptIds.length > 0) {
-      try {
-        const depRes = await db.collection('departments').where({ _id: _.in(adminDeptIds) }).get();
-        allowedNames = depRes.data.map(d => d.name);
-      } catch (err) {
-        console.error('查询管理部门失败', err);
-      }
-      if (!allowedNames || allowedNames.length === 0) {
-        return { ok: false, msg: '未分配可管理的部门，无法导出' };
-      }
     }
 
     // 查询条件：优先按勾选的 ids；否则按筛选状态
@@ -42,20 +28,16 @@ exports.main = async (event, context) => {
     } else {
       let where = {};
       if (filter && filter !== 'all') where = { status: filter };
-      if (allowedNames) where.deptName = _.in(allowedNames);
       query = db.collection('applications').where(where);
     }
 
     const { data } = await query.orderBy('createTime', 'desc').limit(1000).get();
 
-    // 勾选导出时兜底过滤：只保留权限范围内的部门
-    const filtered = (data || []).filter(item => !allowedNames || allowedNames.includes(item.deptName));
-
-    if (!filtered || filtered.length === 0) {
+    if (!data || data.length === 0) {
       return { ok: false, msg: '没有可导出的报名数据' };
     }
 
-    const rows = filtered.map(item => ({
+    const rows = data.map(item => ({
       姓名: item.name || '',
       学号: item.stuId || '',
       学院: item.college || '',

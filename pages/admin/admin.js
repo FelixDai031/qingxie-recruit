@@ -579,23 +579,40 @@ Page({
       });
       if (!result || !result.ok) return;
       const deptOptions = this.data.deptOptions;
-      const adminList = (result.data || []).map(a => ({
-        ...a,
-        idShort: (a.openid || '').slice(-8),
-        scopeText: a.isBoss
-          ? '全部部门'
-          : ((a.deptNames && a.deptNames.length) ? a.deptNames.join('、') : '未指定部门'),
-        editing: false,
-        saving: false,
-        editMsg: '',
-        editName: a.name || '',
-        editDeptIds: (a.deptIds || []).slice(),
-        editDeptOptions: deptOptions.map(d => ({
-          _id: d._id,
-          name: d.name,
-          checked: (a.deptIds || []).indexOf(d._id) !== -1
-        }))
-      }));
+      const adminList = (result.data || []).map((a, idx) => {
+        const deptNames = (a.deptNames && a.deptNames.length) ? a.deptNames : [];
+        const isBoss = a.isBoss;
+        const displayName = a.name || (a.isSelf ? '我' : '未命名');
+        let scopeSummary;
+        if (isBoss) {
+          scopeSummary = '管理全部部门';
+        } else if (deptNames.length === 0) {
+          scopeSummary = '未分配部门';
+        } else if (deptNames.length <= 3) {
+          scopeSummary = deptNames.join('、');
+        } else {
+          scopeSummary = deptNames.slice(0, 2).join('、') + ' 等' + deptNames.length + '个部门';
+        }
+        const colors = ['#FF7A59', '#4C6FFF', '#00C9A7', '#9B59B6', '#F59E0B', '#EC4899', '#10B981'];
+        return {
+          ...a,
+          idShort: (a.openid || '').slice(-8),
+          displayName,
+          firstChar: displayName.charAt(0).toUpperCase() || 'A',
+          avatarColor: colors[idx % colors.length],
+          scopeSummary,
+          editing: false,
+          saving: false,
+          editMsg: '',
+          editName: a.name || '',
+          editDeptIds: (a.deptIds || []).slice(),
+          editDeptOptions: deptOptions.map(d => ({
+            _id: d._id,
+            name: d.name,
+            checked: (a.deptIds || []).indexOf(d._id) !== -1
+          }))
+        };
+      });
       this.setData({ adminList });
     } catch (err) {
       console.error('管理员名单加载失败', err);
@@ -610,11 +627,17 @@ Page({
     this.setData({ adminList });
   },
 
-  // 展开 / 收起编辑区（展开时重置为当前已保存的值）
+  // 展开 / 收起编辑区（展开时重置为当前已保存的值；点击整行触发）
   toggleEditAdmin(e) {
     const id = e.currentTarget.dataset.id;
+    const target = this.data.adminList.find(a => a._id === id);
+    if (!target) return;
+    if (target.isSelf) {
+      wx.showToast({ title: '为避免锁死，不能修改自己的权限', icon: 'none' });
+      return;
+    }
     const adminList = this.data.adminList.map(a => {
-      if (a._id !== id) return a;
+      if (a._id !== id) return { ...a, editing: false, editMsg: '' };
       if (a.editing) return { ...a, editing: false, editMsg: '' };
       return {
         ...a,
@@ -630,6 +653,9 @@ Page({
     });
     this.setData({ adminList });
   },
+
+  // 阻止编辑面板内部空白处冒泡收起
+  onAdminPanelTap() {},
 
   cancelEditAdmin(e) {
     this.setAdminField(e.currentTarget.dataset.id, { editing: false, editMsg: '' });

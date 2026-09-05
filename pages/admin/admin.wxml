@@ -163,49 +163,35 @@
       <!-- 管理员名单（修改管理范围 / 备注名 / 移除） -->
       <view class="card admin-list-card">
         <view class="add-admin-title">管理员名单</view>
-        <view class="add-admin-desc">可修改每位管理员的管理范围与备注姓名，或移除其权限。为避免把系统锁死，不能修改或移除你自己。</view>
+        <view class="add-admin-desc">点击行可修改姓名与管理部门；不能改自己。</view>
         <view wx:if="{{!adminList.length}}" class="add-admin-hint">加载中或暂无管理员…</view>
 
-        <view wx:for="{{adminList}}" wx:key="_id" class="admin-item">
-          <view class="admin-item-head">
-            <view class="admin-item-info">
-              <view class="admin-item-name-row">
-                <text class="admin-item-name">{{item.name || ('ID ' + item.idShort)}}</text>
-                <text wx:if="{{item.isSelf}}" class="admin-self-tag">我自己</text>
-                <text wx:if="{{item.isBoss}}" class="admin-boss-tag">负责人</text>
+        <view wx:for="{{adminList}}" wx:key="_id" class="admin-row {{item.editing ? 'expanded' : ''}}">
+          <view class="admin-row-main" catchtap="toggleEditAdmin" data-id="{{item._id}}">
+            <view class="admin-avatar" style="background: {{item.avatarColor}}">{{item.firstChar}}</view>
+            <view class="admin-meta">
+              <view class="admin-title">
+                <text class="admin-name">{{item.displayName}}</text>
+                <text wx:if="{{item.isSelf}}" class="admin-tag self">我</text>
+                <text wx:elif="{{item.isBoss}}" class="admin-tag boss">负责人</text>
+                <text wx:else class="admin-tag dept">部门</text>
               </view>
-              <text class="admin-item-scope">{{item.isBoss ? '管理全部部门' : ('限：' + item.scopeText)}}</text>
+              <text class="admin-scope">{{item.scopeSummary}}</text>
             </view>
-            <view class="admin-item-btns">
-              <button
-                wx:if="{{!item.isSelf}}"
-                class="req-btn req-edit"
-                hover-class="btn-hover"
-                hover-stay-time="120"
-                catchtap="toggleEditAdmin"
-                data-id="{{item._id}}"
-              >{{item.editing ? '收起' : '修改'}}</button>
-              <button
-                wx:if="{{!item.isSelf}}"
-                class="req-btn req-remove"
-                hover-class="btn-hover"
-                hover-stay-time="120"
-                catchtap="removeAdmin"
-                data-id="{{item._id}}"
-              >移除</button>
-            </view>
+            <text class="admin-chevron">{{item.editing ? '▲' : '›'}}</text>
           </view>
 
-          <!-- 展开后的编辑区 -->
-          <view wx:if="{{item.editing}}" class="admin-edit-box">
+          <!-- 展开后的编辑面板 -->
+          <view wx:if="{{item.editing}}" class="admin-edit-panel" catchtap="onAdminPanelTap">
             <input
               class="add-admin-input admin-edit-input"
-              placeholder="备注姓名（可选，便于辨认是谁）"
+              placeholder="备注姓名（可选）"
               value="{{item.editName}}"
               bindinput="onAdminNameInput"
               data-id="{{item._id}}"
             />
-            <view class="dept-chips">
+            <view class="admin-edit-hint">管理部门（不勾选 = 全部部门）</view>
+            <view class="dept-chips compact">
               <view
                 wx:for="{{item.editDeptOptions}}"
                 wx:for-item="d"
@@ -218,10 +204,9 @@
                 data-dept="{{d._id}}"
               >{{d.name}}</view>
             </view>
-            <view class="add-admin-hint">{{item.editDeptIds.length ? '将限制为管理上面勾选的 ' + item.editDeptIds.length + ' 个部门' : '不勾选任何部门 = 管理全部部门'}}</view>
             <view class="admin-edit-actions">
               <button
-                class="req-btn req-approve"
+                class="btn-save"
                 hover-class="btn-hover"
                 hover-stay-time="120"
                 catchtap="saveAdminScope"
@@ -229,12 +214,19 @@
                 loading="{{item.saving}}"
               >保存</button>
               <button
-                class="req-btn req-reject"
+                class="btn-cancel"
                 hover-class="btn-hover"
                 hover-stay-time="120"
                 catchtap="cancelEditAdmin"
                 data-id="{{item._id}}"
               >取消</button>
+              <button
+                class="btn-remove"
+                hover-class="btn-hover"
+                hover-stay-time="120"
+                catchtap="removeAdmin"
+                data-id="{{item._id}}"
+              >移除</button>
             </view>
             <view wx:if="{{item.editMsg}}" class="add-admin-msg">{{item.editMsg}}</view>
           </view>
