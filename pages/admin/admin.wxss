@@ -91,6 +91,14 @@
   margin-bottom: 16rpx;
 }
 
+/* 添加管理员时的备注姓名输入框（独占一行） */
+.add-admin-name-input {
+  flex: none;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 16rpx;
+}
+
 /* ===== 管理员申请审批 ===== */
 .admin-req-card {
   margin-top: 20rpx;
@@ -670,6 +678,119 @@
   font-weight: 400;
   line-height: 1;
   transform: translateY(2rpx);
+}
+
+/* ===== 管理员名单（修改范围 / 备注名 / 移除） ===== */
+.admin-list-card {
+  margin-top: 20rpx;
+  margin-bottom: 20rpx;
+  border: 2rpx solid #FFE0D1;
+}
+
+.admin-item {
+  padding: 20rpx 0;
+  border-top: 2rpx solid #F0F1F2;
+}
+
+.admin-item:first-of-type {
+  border-top: none;
+}
+
+.admin-item-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+
+.admin-item-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+}
+
+.admin-item-name-row {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.admin-item-name {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--text);
+  max-width: 280rpx;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.admin-self-tag,
+.admin-boss-tag {
+  flex: none;
+  font-size: 20rpx;
+  padding: 2rpx 14rpx;
+  border-radius: 999rpx;
+  font-weight: 500;
+}
+
+.admin-self-tag {
+  background: #EEF2FF;
+  color: #4C6FFF;
+}
+
+.admin-boss-tag {
+  background: #FFF1EC;
+  color: var(--primary);
+}
+
+.admin-item-scope {
+  font-size: 24rpx;
+  color: var(--text-sub);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.admin-item-btns {
+  flex: none;
+  display: flex;
+  gap: 14rpx;
+}
+
+.req-edit {
+  background: #FFF1EC;
+  color: var(--primary);
+}
+
+.req-remove {
+  background: #F5F6F7;
+  color: var(--text-sub);
+}
+
+.admin-edit-box {
+  margin-top: 18rpx;
+  padding: 22rpx;
+  background: #FAFBFC;
+  border-radius: 14rpx;
+}
+
+.admin-edit-input {
+  flex: none;
+  width: 100%;
+  margin-bottom: 18rpx;
+}
+
+.admin-edit-actions {
+  display: flex;
+  gap: 16rpx;
+}
+
+.admin-edit-actions .req-btn {
+  width: 160rpx;
 }
 
 /* ===== 加载态 ===== */

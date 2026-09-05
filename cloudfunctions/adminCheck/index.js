@@ -430,9 +430,9 @@ exports.main = async (event, context) => {
     }
   }
 
-  // 6. 添加管理员（仅已有管理员可调用，支持指定管理部门；不传 deptIds = 全部部门）
+  // 6. 添加管理员（仅已有管理员可调用，支持指定管理部门与备注名；不传 deptIds = 全部部门）
   if (action === 'addAdmin') {
-    const { openid, deptIds } = event;
+    const { openid, deptIds, name } = event;
     if (!openid) return { ok: false, msg: '缺少 openid' };
     const exist = await db.collection('admins').where({ openid }).get();
     if (exist.data && exist.data.length > 0) {
@@ -452,7 +452,12 @@ exports.main = async (event, context) => {
       }
     }
     await db.collection('admins').add({
-      data: { openid, deptIds: validDeptIds, createTime: db.serverDate() }
+      data: {
+        openid,
+        deptIds: validDeptIds,
+        name: (name || '').slice(0, 20),
+        createTime: db.serverDate()
+      }
     });
     return {
       ok: true,
@@ -525,6 +530,99 @@ exports.main = async (event, context) => {
       return { ok: true, msg: '已拒绝' };
     } catch (err) {
       console.error('rejectAdmin error', err);
+      return { ok: false, msg: '操作失败' };
+    }
+  }
+
+  // 6.8 管理员名单：列出全部管理员及其管理范围（任何管理员可查看）
+  if (action === 'listAdmins') {
+    const self = await getAdmin();
+    if (!self) return { ok: false, msg: '无权限' };
+    try {
+      const { data: admins } = await db.collection('admins').orderBy('createTime', 'asc').get();
+      const { data: depts } = await db.collection('departments').get();
+      const deptMap = {};
+      (depts || []).forEach(d => { deptMap[d._id] = d.name; });
+      const list = (admins || []).map(a => {
+        const ids = Array.isArray(a.deptIds) ? a.deptIds : [];
+        return {
+          _id: a._id,
+          openid: a.openid,
+          name: a.name || '',
+          isSelf: a.openid === OPENID,
+          isBoss: ids.length === 0,
+          deptIds: ids,
+          deptNames: ids.map(id => deptMap[id] || '未知部门')
+        };
+      });
+      return { ok: true, data: list, selfOpenid: OPENID };
+    } catch (err) {
+      console.error('listAdmins error', err);
+      return { ok: false, msg: '查询失败' };
+    }
+  }
+
+  // 6.9 修改管理员的管理范围与备注名
+  // 安全底线：不能修改自己，避免把自己降权后无人能恢复
+  if (action === 'updateAdminDept') {
+    const self = await getAdmin();
+    if (!self) return { ok: false, msg: '无权限' };
+    const { id, deptIds, name } = event;
+    if (!id) return { ok: false, msg: '缺少管理员 id' };
+    try {
+      const res = await db.collection('admins').doc(id).get();
+      const target = res.data;
+      if (!target) return { ok: false, msg: '管理员不存在' };
+      if (target.openid === OPENID) {
+        return { ok: false, msg: '不能修改自己的权限，请让其他管理员操作' };
+      }
+      // 校验部门有效性；空 = 全部部门
+      let validDeptIds = [];
+      if (Array.isArray(deptIds) && deptIds.length > 0) {
+        const depRes = await db.collection('departments').where({ _id: _.in(deptIds) }).get();
+        validDeptIds = depRes.data.map(d => d._id);
+        if (validDeptIds.length === 0) {
+          return { ok: false, msg: '所选部门无效' };
+        }
+      }
+      const newName = (typeof name === 'string' ? name : (target.name || '')).slice(0, 20);
+      await db.collection('admins').doc(id).update({
+        data: { deptIds: validDeptIds, name: newName }
+      });
+      return {
+        ok: true,
+        msg: validDeptIds.length
+          ? '已更新（限 ' + validDeptIds.length + ' 个部门）'
+          : '已更新（全部部门）'
+      };
+    } catch (err) {
+      console.error('updateAdminDept error', err);
+      return { ok: false, msg: '操作失败' };
+    }
+  }
+
+  // 6.10 移除管理员
+  // 安全底线：不能移除自己；不能移除最后一名管理员
+  if (action === 'removeAdmin') {
+    const self = await getAdmin();
+    if (!self) return { ok: false, msg: '无权限' };
+    const { id } = event;
+    if (!id) return { ok: false, msg: '缺少管理员 id' };
+    try {
+      const res = await db.collection('admins').doc(id).get();
+      const target = res.data;
+      if (!target) return { ok: false, msg: '管理员不存在' };
+      if (target.openid === OPENID) {
+        return { ok: false, msg: '不能移除自己' };
+      }
+      const all = await db.collection('admins').get();
+      if (!all.data || all.data.length <= 1) {
+        return { ok: false, msg: '至少要保留一名管理员' };
+      }
+      await db.collection('admins').doc(id).remove();
+      return { ok: true, msg: '已移除管理员' };
+    } catch (err) {
+      console.error('removeAdmin error', err);
       return { ok: false, msg: '操作失败' };
     }
   }
