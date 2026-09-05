@@ -135,22 +135,16 @@
         </view>
       </view>
 
-      <!-- 管理员申请审批 -->
-      <view class="card admin-req-card">
-        <view class="add-admin-title">管理员申请</view>
-        <view class="add-admin-desc">以下同学申请成为管理员，请审批：</view>
-        <view wx:if="{{!adminRequests.length}}" class="add-admin-hint">暂无待审批的申请</view>
-        <view wx:for="{{adminRequests}}" wx:key="_id" class="admin-req-row">
-          <view class="admin-req-info">
-            <text class="admin-req-id">ID：{{item.idShort}}</text>
-            <text class="admin-req-time">{{item.timeText}}</text>
+      <!-- 管理员管理入口 -->
+      <view class="card admin-manage-card" hover-class="btn-hover" hover-stay-time="120" bindtap="goAdminManage">
+        <view class="admin-manage-row">
+          <view class="admin-manage-icon">⚙️</view>
+          <view class="admin-manage-info">
+            <view class="add-admin-title">管理员管理</view>
+            <view class="add-admin-desc">添加/移除管理员、修改管理范围、审批申请。</view>
           </view>
-          <view class="admin-req-btns">
-            <button class="req-btn req-approve" hover-class="btn-hover" hover-stay-time="120" catchtap="approveAdminReq" data-id="{{item._id}}" disabled="{{handlingReq}}">同意</button>
-            <button class="req-btn req-reject" hover-class="btn-hover" hover-stay-time="120" catchtap="rejectAdminReq" data-id="{{item._id}}" disabled="{{handlingReq}}">拒绝</button>
-          </view>
+          <text class="admin-manage-arrow">›</text>
         </view>
-        <button class="btn-notify" hover-class="btn-hover" hover-stay-time="120" bindtap="enableAdminReqNotify">🔔 开启申请微信提醒</button>
       </view>
 
       <!-- 部门简介管理 -->
@@ -158,108 +152,6 @@
         <view class="add-admin-title">部门简介管理</view>
         <view class="add-admin-desc">点击进入后，先选择部门，再编辑其简介与标语，修改后在小程序部门详情页实时生效。</view>
         <button class="btn-enter-edit" hover-class="btn-hover" hover-stay-time="120" bindtap="goEditDept"><text>进入编辑</text><text class="enter-arrow">›</text></button>
-      </view>
-
-      <!-- 管理员名单（修改管理范围 / 备注名 / 移除） -->
-      <view class="card admin-list-card">
-        <view class="add-admin-title">管理员名单</view>
-        <view class="add-admin-desc">点击行可修改姓名与管理部门；不能改自己。</view>
-        <view wx:if="{{!adminList.length}}" class="add-admin-hint">加载中或暂无管理员…</view>
-
-        <view wx:for="{{adminList}}" wx:key="_id" class="admin-row {{item.editing ? 'expanded' : ''}}">
-          <view class="admin-row-main" catchtap="toggleEditAdmin" data-id="{{item._id}}">
-            <view class="admin-avatar" style="background: {{item.avatarColor}}">{{item.firstChar}}</view>
-            <view class="admin-meta">
-              <view class="admin-title">
-                <text class="admin-name">{{item.displayName}}</text>
-                <text wx:if="{{item.isSelf}}" class="admin-tag self">我</text>
-                <text wx:elif="{{item.isBoss}}" class="admin-tag boss">负责人</text>
-                <text wx:else class="admin-tag dept">部门</text>
-              </view>
-              <text class="admin-scope">{{item.scopeSummary}}</text>
-            </view>
-            <text class="admin-chevron">{{item.editing ? '▲' : '›'}}</text>
-          </view>
-
-          <!-- 展开后的编辑面板 -->
-          <view wx:if="{{item.editing}}" class="admin-edit-panel" catchtap="onAdminPanelTap">
-            <input
-              class="add-admin-input admin-edit-input"
-              placeholder="备注姓名（可选）"
-              value="{{item.editName}}"
-              bindinput="onAdminNameInput"
-              data-id="{{item._id}}"
-            />
-            <view class="admin-edit-hint">管理部门（不勾选 = 全部部门）</view>
-            <view class="dept-chips compact">
-              <view
-                wx:for="{{item.editDeptOptions}}"
-                wx:for-item="d"
-                wx:key="_id"
-                class="dept-chip {{d.checked ? 'checked' : ''}}"
-                hover-class="btn-hover"
-                hover-stay-time="120"
-                catchtap="toggleEditDept"
-                data-id="{{item._id}}"
-                data-dept="{{d._id}}"
-              >{{d.name}}</view>
-            </view>
-            <view class="admin-edit-actions">
-              <button
-                class="btn-save"
-                hover-class="btn-hover"
-                hover-stay-time="120"
-                catchtap="saveAdminScope"
-                data-id="{{item._id}}"
-                loading="{{item.saving}}"
-              >保存</button>
-              <button
-                class="btn-cancel"
-                hover-class="btn-hover"
-                hover-stay-time="120"
-                catchtap="cancelEditAdmin"
-                data-id="{{item._id}}"
-              >取消</button>
-              <button
-                class="btn-remove"
-                hover-class="btn-hover"
-                hover-stay-time="120"
-                catchtap="removeAdmin"
-                data-id="{{item._id}}"
-              >移除</button>
-            </view>
-            <view wx:if="{{item.editMsg}}" class="add-admin-msg">{{item.editMsg}}</view>
-          </view>
-        </view>
-      </view>
-
-      <!-- 添加管理员 -->
-      <view class="card add-admin-card">
-        <view class="add-admin-title">添加管理员</view>
-        <view class="add-admin-desc">若同学已在线申请，请用上方「管理员申请」审批；也可以把『我的』页的专属 ID 发给你，粘贴到下方手动添加并勾选其部门。</view>
-        <view class="dept-chips">
-          <view
-            wx:for="{{deptOptions}}"
-            wx:key="_id"
-            class="dept-chip {{item.checked ? 'checked' : ''}}"
-            hover-class="btn-hover"
-            hover-stay-time="120"
-            catchtap="toggleAdminDept"
-            data-id="{{item._id}}"
-          >{{item.name}}</view>
-        </view>
-        <view class="add-admin-hint">{{adminDeptIds.length ? '将授权管理上面勾选的 ' + adminDeptIds.length + ' 个部门' : '不勾选任何部门 = 授权管理全部部门'}}</view>
-        <input
-          class="add-admin-input add-admin-name-input"
-          placeholder="备注姓名（可选，便于以后辨认是谁）"
-          value="{{newAdminName}}"
-          bindinput="onNewAdminNameInput"
-        />
-        <view class="add-admin-row">
-          <input class="add-admin-input" placeholder="粘贴对方专属 ID" value="{{newAdminId}}" bindinput="onNewAdminInput" />
-          <button class="add-admin-btn" hover-class="btn-hover" hover-stay-time="120" bindtap="addAdmin" loading="{{adding}}">添加</button>
-        </view>
-        <view wx:if="{{addMsg}}" class="add-admin-msg">{{addMsg}}</view>
       </view>
 
       <view style="height:40rpx;"></view>

@@ -1,8 +1,5 @@
 // pages/admin/admin.js —— 管理员审核页
 
-// 管理员申请微信提醒的模板 ID（与云函数 ADMIN_REQ_TMPL_ID 保持一致；留空 = 功能关闭）
-const ADMIN_REQ_TMPL_ID = 'StX_veM_rCFpbFDjtsJkAp8_RLi2iUCmE71SafTiFLU';
-
 Page({
   data: {
     loading: true,
@@ -10,10 +7,6 @@ Page({
     filter: 'pending',
     list: [],
     allList: [],
-    newAdminId: '',
-    newAdminName: '',
-    adding: false,
-    addMsg: '',
     exporting: false,
     selectedIds: [],
     allSelected: false,
@@ -26,16 +19,9 @@ Page({
     toggling: false,
     // 顶部标签页：review=报名审核（默认），manage=管理设置
     adminTab: 'review',
-    // 部门级权限：我的管理范围 / 添加管理员时的部门勾选
+    // 部门级权限
     myDeptNames: '',
-    isAllDept: true,
-    deptOptions: [],
-    adminDeptIds: [],
-    // 管理员申请审批
-    adminRequests: [],
-    handlingReq: false,
-    // 管理员名单（可修改管理范围 / 备注姓名 / 移除）
-    adminList: []
+    isAllDept: true
   },
 
   // 切换顶部标签页
@@ -43,155 +29,10 @@ Page({
     const tab = e.currentTarget.dataset.tab;
     if (tab === this.data.adminTab) return;
     this.setData({ adminTab: tab });
-    // 进入管理设置时刷新统计与开关状态，并自动请求一次订阅授权（积累提醒次数）
+    // 进入管理设置时刷新统计与开关状态
     if (tab === 'manage') {
       this.loadStats();
       this.loadConfig();
-      this.loadDeptOptions();
-      this.loadAdminRequests();
-      this.loadAdminList();
-      this.autoSubscribeNotify();
-    }
-  },
-
-  // 进入管理设置时自动请求订阅授权（利用用户本次点击，静默积累提醒次数）
-  // 说明：微信一次性订阅每次授权只能发一条，靠高频点击自动积累，接近"长期提醒"体验
-  autoSubscribeNotify() {
-    if (!ADMIN_REQ_TMPL_ID) return;
-    wx.requestSubscribeMessage({
-      tmplIds: [ADMIN_REQ_TMPL_ID],
-      complete: () => {}
-      // 用户点"允许"则积累一次；勾选"总是保持以上选择"后不再弹窗、自动积累
-    });
-  },
-
-  // 加载待审批的管理员申请
-  async loadAdminRequests() {
-    try {
-      const { result } = await wx.cloud.callFunction({
-        name: 'adminCheck',
-        data: { action: 'listAdminRequests' }
-      });
-      if (result && result.ok) {
-        const list = (result.data || []).map(it => ({
-          ...it,
-          idShort: (it.openid || '').slice(0, 12) + '…',
-          timeText: this.formatDate(it.createTime)
-        }));
-        this.setData({ adminRequests: list });
-      }
-    } catch (err) {
-      console.error('管理员申请加载失败', err);
-    }
-  },
-
-  // 同意管理员申请（默认全部部门权限）
-  async approveAdminReq(e) {
-    if (this.data.handlingReq) return;
-    const id = e.currentTarget.dataset.id;
-    const { confirm } = await wx.showModal({
-      title: '同意申请',
-      content: '通过后该同学将获得【全部部门】的管理权限。如需限定部门，请拒绝后用下方「添加管理员」勾选部门添加。确定同意吗？'
-    });
-    if (!confirm) return;
-    this.setData({ handlingReq: true });
-    try {
-      const { result } = await wx.cloud.callFunction({
-        name: 'adminCheck',
-        data: { action: 'approveAdmin', id }
-      });
-      if (result && result.ok) {
-        wx.showToast({ title: result.msg || '已同意', icon: 'success' });
-      } else {
-        wx.showModal({ title: '操作失败', content: (result && result.msg) || '请重试', showCancel: false });
-      }
-      await this.loadAdminRequests();
-    } catch (err) {
-      console.error('同意申请失败', err);
-      wx.showModal({ title: '操作失败', content: '网络异常，请重试', showCancel: false });
-    } finally {
-      this.setData({ handlingReq: false });
-    }
-  },
-
-  // 拒绝管理员申请
-  async rejectAdminReq(e) {
-    if (this.data.handlingReq) return;
-    const id = e.currentTarget.dataset.id;
-    const { confirm } = await wx.showModal({
-      title: '拒绝申请',
-      content: '确定拒绝该同学的管理员申请吗？对方可再次提交。'
-    });
-    if (!confirm) return;
-    this.setData({ handlingReq: true });
-    try {
-      const { result } = await wx.cloud.callFunction({
-        name: 'adminCheck',
-        data: { action: 'rejectAdmin', id }
-      });
-      if (result && result.ok) {
-        wx.showToast({ title: '已拒绝', icon: 'success' });
-      } else {
-        wx.showModal({ title: '操作失败', content: (result && result.msg) || '请重试', showCancel: false });
-      }
-      await this.loadAdminRequests();
-    } catch (err) {
-      console.error('拒绝申请失败', err);
-      wx.showModal({ title: '操作失败', content: '网络异常，请重试', showCancel: false });
-    } finally {
-      this.setData({ handlingReq: false });
-    }
-  },
-
-  // 加载部门选项（用于添加管理员时勾选管理范围）
-  async loadDeptOptions() {
-    if (this.data.deptOptions.length) return;
-    try {
-      const { result } = await wx.cloud.callFunction({
-        name: 'adminCheck',
-        data: { action: 'listDepts' }
-      });
-      if (result && result.ok) {
-        const deptOptions = (result.data || []).map(d => ({
-          _id: d._id,
-          name: d.name,
-          checked: false
-        }));
-        this.setData({ deptOptions });
-      }
-    } catch (err) {
-      console.error('部门选项加载失败', err);
-    }
-  },
-
-  // 勾选/取消部门（添加管理员的管理范围）
-  toggleAdminDept(e) {
-    const id = e.currentTarget.dataset.id;
-    const deptOptions = this.data.deptOptions.map(d =>
-      d._id === id ? { ...d, checked: !d.checked } : d
-    );
-    this.setData({
-      deptOptions,
-      adminDeptIds: deptOptions.filter(d => d.checked).map(d => d._id)
-    });
-  },
-
-  // 开启管理员申请的微信提醒（负责人自助订阅；每次授权可收一条，可多次点击积累）
-  async enableAdminReqNotify() {
-    if (!ADMIN_REQ_TMPL_ID) {
-      wx.showModal({
-        title: '提醒未配置',
-        content: '提醒模板 ID 尚未填写（admin.js 与 adminCheck 云函数的 ADMIN_REQ_TMPL_ID），填好后此按钮即可用。',
-        showCancel: false
-      });
-      return;
-    }
-    try {
-      await wx.requestSubscribeMessage({ tmplIds: [ADMIN_REQ_TMPL_ID] });
-      wx.showToast({ title: '已开启，可多点几次积累', icon: 'none' });
-    } catch (err) {
-      console.error('订阅提醒失败', err);
-      wx.showToast({ title: '未能开启，请重试', icon: 'none' });
     }
   },
 
@@ -519,237 +360,24 @@ Page({
     });
   },
 
-  onNewAdminInput(e) {
-    this.setData({ newAdminId: (e.detail.value || '').trim(), addMsg: '' });
-  },
-
-  onNewAdminNameInput(e) {
-    this.setData({ newAdminName: (e.detail.value || '').trim(), addMsg: '' });
-  },
-
-  async addAdmin() {
-    const openid = this.data.newAdminId;
-    if (!openid) {
-      wx.showToast({ title: '请先粘贴对方 ID', icon: 'none' });
-      return;
-    }
-    this.setData({ adding: true, addMsg: '' });
-    try {
-      const { result } = await wx.cloud.callFunction({
-        name: 'adminCheck',
-        data: {
-          action: 'addAdmin',
-          openid,
-          deptIds: this.data.adminDeptIds,
-          name: this.data.newAdminName
-        }
-      });
-      if (result && result.ok) {
-        // 成功后清空输入与部门勾选
-        const deptOptions = this.data.deptOptions.map(d => ({ ...d, checked: false }));
-        this.setData({
-          newAdminId: '',
-          newAdminName: '',
-          addMsg: result.msg || '添加成功',
-          deptOptions,
-          adminDeptIds: []
-        });
-        wx.showToast({ title: '已添加为管理员', icon: 'success' });
-        this.loadAdminList();
-      } else {
-        this.setData({ addMsg: (result && result.msg) || '添加失败' });
-      }
-    } catch (err) {
-      console.error('添加管理员失败', err);
-      this.setData({ addMsg: '添加失败，请确认 adminCheck 云函数已部署' });
-    } finally {
-      this.setData({ adding: false });
-    }
-  },
-
-  // ===== 管理员名单：查看 / 改管理范围 / 改备注名 / 移除 =====
-
-  // 加载名单（先确保部门选项已就绪，供编辑区勾选使用）
-  async loadAdminList() {
-    try {
-      await this.loadDeptOptions();
-      const { result } = await wx.cloud.callFunction({
-        name: 'adminCheck',
-        data: { action: 'listAdmins' }
-      });
-      if (!result || !result.ok) return;
-      const deptOptions = this.data.deptOptions;
-      const adminList = (result.data || []).map((a, idx) => {
-        const deptNames = (a.deptNames && a.deptNames.length) ? a.deptNames : [];
-        const isBoss = a.isBoss;
-        const displayName = a.name || (a.isSelf ? '我' : '未命名');
-        let scopeSummary;
-        if (isBoss) {
-          scopeSummary = '管理全部部门';
-        } else if (deptNames.length === 0) {
-          scopeSummary = '未分配部门';
-        } else if (deptNames.length <= 3) {
-          scopeSummary = deptNames.join('、');
-        } else {
-          scopeSummary = deptNames.slice(0, 2).join('、') + ' 等' + deptNames.length + '个部门';
-        }
-        const colors = ['#FF7A59', '#4C6FFF', '#00C9A7', '#9B59B6', '#F59E0B', '#EC4899', '#10B981'];
-        return {
-          ...a,
-          idShort: (a.openid || '').slice(-8),
-          displayName,
-          firstChar: displayName.charAt(0).toUpperCase() || 'A',
-          avatarColor: colors[idx % colors.length],
-          scopeSummary,
-          editing: false,
-          saving: false,
-          editMsg: '',
-          editName: a.name || '',
-          editDeptIds: (a.deptIds || []).slice(),
-          editDeptOptions: deptOptions.map(d => ({
-            _id: d._id,
-            name: d.name,
-            checked: (a.deptIds || []).indexOf(d._id) !== -1
-          }))
-        };
-      });
-      this.setData({ adminList });
-    } catch (err) {
-      console.error('管理员名单加载失败', err);
-    }
-  },
-
-  // 小工具：只更新名单中某一项的部分字段
-  setAdminField(id, patch) {
-    const adminList = this.data.adminList.map(a =>
-      a._id === id ? { ...a, ...patch } : a
-    );
-    this.setData({ adminList });
-  },
-
-  // 展开 / 收起编辑区（展开时重置为当前已保存的值；点击整行触发）
-  toggleEditAdmin(e) {
-    const id = e.currentTarget.dataset.id;
-    const target = this.data.adminList.find(a => a._id === id);
-    if (!target) return;
-    if (target.isSelf) {
-      wx.showToast({ title: '为避免锁死，不能修改自己的权限', icon: 'none' });
-      return;
-    }
-    const adminList = this.data.adminList.map(a => {
-      if (a._id !== id) return { ...a, editing: false, editMsg: '' };
-      if (a.editing) return { ...a, editing: false, editMsg: '' };
-      return {
-        ...a,
-        editing: true,
-        editMsg: '',
-        editName: a.name || '',
-        editDeptIds: (a.deptIds || []).slice(),
-        editDeptOptions: (a.editDeptOptions || []).map(d => ({
-          ...d,
-          checked: (a.deptIds || []).indexOf(d._id) !== -1
-        }))
-      };
-    });
-    this.setData({ adminList });
-  },
-
-  // 阻止编辑面板内部空白处冒泡收起
-  onAdminPanelTap() {},
-
-  cancelEditAdmin(e) {
-    this.setAdminField(e.currentTarget.dataset.id, { editing: false, editMsg: '' });
-  },
-
-  onAdminNameInput(e) {
-    this.setAdminField(e.currentTarget.dataset.id, {
-      editName: (e.detail.value || '').trim()
-    });
-  },
-
-  toggleEditDept(e) {
-    const id = e.currentTarget.dataset.id;
-    const deptId = e.currentTarget.dataset.dept;
-    const adminList = this.data.adminList.map(a => {
-      if (a._id !== id) return a;
-      const editDeptOptions = a.editDeptOptions.map(d =>
-        d._id === deptId ? { ...d, checked: !d.checked } : d
-      );
-      return {
-        ...a,
-        editDeptOptions,
-        editDeptIds: editDeptOptions.filter(d => d.checked).map(d => d._id)
-      };
-    });
-    this.setData({ adminList });
-  },
-
-  async saveAdminScope(e) {
-    const id = e.currentTarget.dataset.id;
-    const target = this.data.adminList.find(a => a._id === id);
-    if (!target) return;
-    if (target.isSelf) {
-      wx.showToast({ title: '不能修改自己的权限', icon: 'none' });
-      return;
-    }
-    this.setAdminField(id, { saving: true, editMsg: '' });
-    try {
-      const { result } = await wx.cloud.callFunction({
-        name: 'adminCheck',
-        data: {
-          action: 'updateAdminDept',
-          id,
-          deptIds: target.editDeptIds,
-          name: target.editName
-        }
-      });
-      if (result && result.ok) {
-        wx.showToast({ title: result.msg || '已更新', icon: 'success' });
-        await this.loadAdminList();
-      } else {
-        this.setAdminField(id, {
-          saving: false,
-          editMsg: (result && result.msg) || '保存失败'
+  // 跳转管理员管理专页
+  goAdminManage() {
+    wx.navigateTo({
+      url: '/pages/adminManage/adminManage',
+      fail: (err) => {
+        console.error('跳转管理员管理页失败', err);
+        wx.showModal({
+          title: '跳转失败',
+          content: '请确认已重新上传小程序代码（含 adminManage 页面）并重新编译。',
+          showCancel: false
         });
       }
-    } catch (err) {
-      console.error('保存管理范围失败', err);
-      this.setAdminField(id, { saving: false, editMsg: '保存失败，请确认云函数已部署' });
-    }
+    });
   },
 
-  removeAdmin(e) {
-    const id = e.currentTarget.dataset.id;
-    const target = this.data.adminList.find(a => a._id === id);
-    if (!target) return;
-    if (target.isSelf) {
-      wx.showToast({ title: '不能移除自己', icon: 'none' });
-      return;
-    }
-    const label = target.name || ('ID ' + target.idShort);
-    wx.showModal({
-      title: '移除管理员',
-      content: '确定移除「' + label + '」的管理员权限吗？\n移除后对方将无法进入管理端。',
-      confirmText: '移除',
-      confirmColor: '#FF3B30',
-      success: async (res) => {
-        if (!res.confirm) return;
-        try {
-          const { result } = await wx.cloud.callFunction({
-            name: 'adminCheck',
-            data: { action: 'removeAdmin', id }
-          });
-          if (result && result.ok) {
-            wx.showToast({ title: '已移除', icon: 'success' });
-            await this.loadAdminList();
-          } else {
-            wx.showToast({ title: (result && result.msg) || '移除失败', icon: 'none' });
-          }
-        } catch (err) {
-          console.error('移除管理员失败', err);
-          wx.showToast({ title: '移除失败，请确认云函数已部署', icon: 'none' });
-        }
-      }
-    });
+  formatDate(d) {
+    const date = new Date(d);
+    const pad = n => (n < 10 ? '0' + n : n);
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
   }
 });

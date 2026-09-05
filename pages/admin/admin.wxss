@@ -99,91 +99,49 @@
   margin-bottom: 16rpx;
 }
 
-/* ===== 管理员申请审批 ===== */
-.admin-req-card {
-  margin-top: 20rpx;
+/* ===== 管理员管理入口 ===== */
+.admin-manage-card {
   margin-bottom: 20rpx;
+  background: linear-gradient(135deg, #FFF7F4, #FFFFFF);
   border: 2rpx solid #FFE0D1;
 }
 
-.admin-req-row {
+.admin-manage-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 16rpx;
-  padding: 18rpx 0;
-  border-top: 2rpx solid #F0F1F2;
+  gap: 22rpx;
 }
 
-.admin-req-info {
+.admin-manage-icon {
+  flex: none;
+  width: 76rpx;
+  height: 76rpx;
+  line-height: 76rpx;
+  text-align: center;
+  font-size: 40rpx;
+  background: #FFFFFF;
+  border-radius: 50%;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.06);
+}
+
+.admin-manage-info {
   flex: 1;
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 4rpx;
+  gap: 6rpx;
 }
 
-.admin-req-id {
-  font-size: 26rpx;
-  color: var(--text);
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+.admin-manage-info .add-admin-desc {
+  margin-bottom: 0;
 }
 
-.admin-req-time {
-  font-size: 22rpx;
-  color: var(--text-sub);
-}
-
-.admin-req-btns {
+.admin-manage-arrow {
   flex: none;
-  display: flex;
-  gap: 14rpx;
-}
-
-.req-btn {
-  width: 110rpx;
-  height: 64rpx;
-  line-height: 64rpx;
-  font-size: 26rpx;
-  font-weight: 600;
-  border-radius: 12rpx;
-  padding: 0;
-  border: none;
-}
-
-.req-btn::after {
-  border: none;
-}
-
-.req-approve {
-  background: linear-gradient(135deg, var(--primary), var(--primary-light));
-  color: #FFFFFF;
-}
-
-.req-reject {
-  background: #F5F6F7;
-  color: var(--text-sub);
-}
-
-/* 开启申请提醒按钮 */
-.btn-notify {
-  margin-top: 20rpx;
-  width: 100%;
-  height: 80rpx;
-  line-height: 80rpx;
-  background: #FFFFFF;
-  color: var(--primary);
-  font-size: 27rpx;
-  font-weight: 600;
-  border-radius: 14rpx;
-  border: 2rpx solid var(--primary);
-  padding: 0;
-}
-
-.btn-notify::after {
-  border: none;
+  font-size: 38rpx;
+  color: #C8C9CC;
+  line-height: 1;
+  transform: translateY(1rpx);
 }
 
 /* ===== 审核总览（统计看板） ===== */
@@ -580,11 +538,7 @@
   border: 2rpx solid #E2E5E9 !important;
 }
 
-/* ===== 添加管理员 ===== */
-.add-admin-card {
-  margin-bottom: 20rpx;
-}
-
+/* ===== 通用卡片标题 ===== */
 .add-admin-title {
   font-size: 30rpx;
   font-weight: 700;
@@ -596,53 +550,6 @@
   color: var(--text-sub);
   line-height: 1.6;
   margin-bottom: 20rpx;
-}
-
-.add-admin-row {
-  display: flex;
-  gap: 16rpx;
-  align-items: center;
-}
-
-.add-admin-input {
-  flex: 1;
-  height: 84rpx;
-  background: #F5F6F7;
-  border-radius: 16rpx;
-  padding: 0 24rpx;
-  font-size: 28rpx;
-  box-sizing: border-box;
-  border: 2rpx solid transparent;
-}
-
-.add-admin-input:focus {
-  border-color: var(--primary);
-  background: #FFF7F4;
-}
-
-.add-admin-btn {
-  width: 170rpx;
-  height: 84rpx;
-  line-height: 84rpx;
-  background: linear-gradient(135deg, var(--primary), var(--primary-light));
-  color: #FFFFFF;
-  font-size: 28rpx;
-  font-weight: 600;
-  border-radius: 16rpx;
-  border: none;
-  padding: 0;
-  flex-shrink: 0;
-  box-shadow: 0 8rpx 18rpx rgba(255, 86, 48, 0.22);
-}
-
-.add-admin-btn::after {
-  border: none;
-}
-
-.add-admin-msg {
-  margin-top: 16rpx;
-  font-size: 24rpx;
-  color: var(--text-sub);
 }
 
 /* ===== 部门简介管理（醒目入口） ===== */
@@ -678,190 +585,6 @@
   font-weight: 400;
   line-height: 1;
   transform: translateY(2rpx);
-}
-
-/* ===== 管理员名单（紧凑列表 + 点击展开） ===== */
-.admin-list-card {
-  margin-top: 20rpx;
-  margin-bottom: 20rpx;
-}
-
-.admin-row {
-  border-top: 1rpx solid #F0F1F2;
-}
-
-.admin-row:first-of-type {
-  border-top: none;
-}
-
-.admin-row-main {
-  display: flex;
-  align-items: center;
-  padding: 22rpx 0;
-}
-
-.admin-avatar {
-  flex: none;
-  width: 72rpx;
-  height: 72rpx;
-  margin-right: 20rpx;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #FFFFFF;
-  font-size: 32rpx;
-  font-weight: 700;
-  letter-spacing: 0;
-}
-
-.admin-meta {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 4rpx;
-}
-
-.admin-title {
-  display: flex;
-  align-items: center;
-  gap: 10rpx;
-}
-
-.admin-name {
-  font-size: 30rpx;
-  font-weight: 600;
-  color: var(--text);
-  max-width: 320rpx;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.admin-tag {
-  flex: none;
-  font-size: 18rpx;
-  padding: 2rpx 10rpx;
-  border-radius: 999rpx;
-  font-weight: 500;
-  line-height: 24rpx;
-}
-
-.admin-tag.self {
-  background: #EEF2FF;
-  color: #4C6FFF;
-}
-
-.admin-tag.boss {
-  background: #FFF1EC;
-  color: var(--primary);
-}
-
-.admin-tag.dept {
-  background: #F5F6F7;
-  color: var(--text-sub);
-}
-
-.admin-scope {
-  font-size: 24rpx;
-  color: var(--text-sub);
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  padding-right: 12rpx;
-}
-
-.admin-chevron {
-  flex: none;
-  margin-left: 10rpx;
-  font-size: 34rpx;
-  color: #C8C9CC;
-  line-height: 1;
-  font-weight: 400;
-  transform: translateY(1rpx);
-}
-
-.admin-row.expanded .admin-chevron {
-  color: var(--primary);
-}
-
-/* 展开编辑面板 */
-.admin-edit-panel {
-  margin-top: 6rpx;
-  margin-bottom: 8rpx;
-  padding: 22rpx;
-  background: #FAFBFC;
-  border-radius: 16rpx;
-}
-
-.admin-edit-hint {
-  font-size: 22rpx;
-  color: var(--text-sub);
-  margin-bottom: 12rpx;
-}
-
-.admin-edit-actions {
-  display: flex;
-  align-items: center;
-  gap: 16rpx;
-  margin-top: 22rpx;
-}
-
-.btn-save,
-.btn-cancel,
-.btn-remove {
-  flex: 1;
-  height: 72rpx;
-  line-height: 72rpx;
-  font-size: 28rpx;
-  font-weight: 600;
-  border-radius: 12rpx;
-  padding: 0;
-  border: none;
-}
-
-.btn-save::after,
-.btn-cancel::after,
-.btn-remove::after {
-  border: none;
-}
-
-.btn-save {
-  background: linear-gradient(135deg, var(--primary), var(--primary-light));
-  color: #FFFFFF;
-}
-
-.btn-cancel {
-  background: #F5F6F7;
-  color: var(--text);
-}
-
-.btn-remove {
-  background: #FFF1F1;
-  color: #FF4D4F;
-}
-
-.admin-edit-actions .btn-save[loading] {
-  color: #FFFFFF;
-}
-
-/* 紧凑模式下的部门 chips */
-.dept-chips.compact {
-  margin-top: 0;
-  margin-bottom: 0;
-}
-
-.dept-chips.compact .dept-chip {
-  height: 56rpx;
-  line-height: 56rpx;
-  font-size: 24rpx;
-  padding: 0 18rpx;
-  border-radius: 28rpx;
-}
-
-.admin-edit-actions .req-btn {
-  width: 160rpx;
 }
 
 /* ===== 加载态 ===== */

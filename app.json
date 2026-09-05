@@ -5,6 +5,7 @@
     "pages/apply/apply",
     "pages/mine/mine",
     "pages/admin/admin",
+    "pages/adminManage/adminManage",
     "pages/adminDetail/adminDetail",
     "pages/deptEdit/deptEdit"
   ],
