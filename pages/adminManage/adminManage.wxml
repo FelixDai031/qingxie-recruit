@@ -139,6 +139,8 @@
 
           <view wx:for="{{adminRequests}}" wx:key="_id" class="admin-req-row">
             <view class="admin-req-info">
+              <text class="admin-req-name">{{item.name || '未填写姓名'}}</text>
+              <text wx:if="{{item.remark}}" class="admin-req-remark">备注：{{item.remark}}</text>
               <text class="admin-req-id">ID：{{item.idShort}}</text>
               <text class="admin-req-time">{{item.timeText}}</text>
             </view>

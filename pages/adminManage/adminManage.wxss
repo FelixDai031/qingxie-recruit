@@ -442,9 +442,33 @@
   gap: 4rpx;
 }
 
-.admin-req-id {
-  font-size: 26rpx;
+.admin-req-name {
+  font-size: 30rpx;
+  font-weight: 700;
   color: var(--text);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.admin-req-remark {
+  font-size: 24rpx;
+  color: var(--text);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  word-break: break-all;
+  background: #F5F6F7;
+  padding: 6rpx 12rpx;
+  border-radius: 8rpx;
+  margin: 2rpx 0;
+}
+
+.admin-req-id {
+  font-size: 22rpx;
+  color: var(--text-sub);
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;

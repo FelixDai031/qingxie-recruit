@@ -147,6 +147,20 @@ exports.main = async (event, context) => {
   // 3.9 申请成为管理员（登录用户提交，由负责人在管理页审批）
   if (action === 'requestAdmin') {
     try {
+      // 必填：姓名/备注（用于负责人在申请列表 & 微信通知里识别身份）
+      const rawName = (event && event.name) || '';
+      const name = String(rawName).trim();
+      if (!name) {
+        return { ok: false, msg: '请先填写姓名/备注再提交申请' };
+      }
+      if (name.length > 30) {
+        return { ok: false, msg: '姓名/备注不超过 30 字' };
+      }
+      // 选填：补充说明
+      const remark = String((event && event.remark) || '').trim();
+      if (remark.length > 200) {
+        return { ok: false, msg: '补充说明不超过 200 字' };
+      }
       // 已是管理员
       const rec = await getAdmin();
       if (rec) return { ok: false, msg: '你已经是管理员了' };
@@ -158,8 +172,14 @@ exports.main = async (event, context) => {
       if (exist.data && exist.data.length > 0) {
         return { ok: false, msg: '你已提交过申请，等待负责人审核' };
       }
-      const addRes = await db.collection('adminRequests').add({
-        data: { openid: OPENID, status: 'pending', createTime: db.serverDate() }
+      await db.collection('adminRequests').add({
+        data: {
+          openid: OPENID,
+          name,
+          remark,
+          status: 'pending',
+          createTime: db.serverDate()
+        }
       });
 
       // 微信提醒负责人（全部部门管理员）：有新管理员申请待审批
@@ -172,10 +192,10 @@ exports.main = async (event, context) => {
           const bosses = await db.collection('admins').get();
           const bossList = (bosses.data || []).filter(b => !Array.isArray(b.deptIds) || b.deptIds.length === 0);
           const notifyData = ADMIN_REQ_TMPL_DATA({
-            applicant: (OPENID || '').slice(0, 8),
+            applicant: name,                  // 直接展示姓名，方便负责人一眼识别
             type: '管理员申请',
             time: timeText,
-            remark: '请进入小程序审批'
+            remark: remark || '请进入小程序审批'
           });
           for (const boss of bossList) {
             try {

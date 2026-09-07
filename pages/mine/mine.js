@@ -13,7 +13,12 @@ Page({
     logging: false,
     applications: [],
     isAdmin: false,
-    initing: false
+    initing: false,
+    // 申请管理员弹层
+    applySheetVisible: false,
+    applyName: '',
+    applyRemark: '',
+    applySubmitting: false
   },
 
   async onShow() {
@@ -183,20 +188,62 @@ Page({
     });
   },
 
-  // 非管理员：在线申请管理员认证（负责人在小程序管理页审批）
-  async applyAdmin() {
+  // 非管理员：点击卡片 → 打开申请弹层（先填姓名/备注才能提交）
+  openApplySheet() {
     if (!this.data.openid) {
       wx.showToast({ title: '请稍候，身份获取中', icon: 'none' });
       return;
     }
+    this.setData({
+      applySheetVisible: true,
+      applyName: '',
+      applyRemark: '',
+      applySubmitting: false
+    });
+  },
+
+  closeApplySheet() {
+    if (this.data.applySubmitting) return;
+    this.setData({ applySheetVisible: false });
+  },
+
+  stopPropagation() {},
+
+  onApplyNameInput(e) {
+    this.setData({ applyName: (e.detail.value || '').trim() });
+  },
+
+  onApplyRemarkInput(e) {
+    this.setData({ applyRemark: e.detail.value || '' });
+  },
+
+  // 提交申请：姓名必填，备注可选
+  async submitApplyAdmin() {
+    const name = this.data.applyName;
+    if (!name) {
+      wx.showToast({ title: '请先填写姓名/备注', icon: 'none' });
+      return;
+    }
+    if (name.length > 30) {
+      wx.showToast({ title: '姓名/备注不超过 30 字', icon: 'none' });
+      return;
+    }
+    const remark = (this.data.applyRemark || '').trim();
+    if (remark.length > 200) {
+      wx.showToast({ title: '补充说明不超过 200 字', icon: 'none' });
+      return;
+    }
+    this.setData({ applySubmitting: true });
     wx.showLoading({ title: '提交中' });
     try {
       const { result } = await wx.cloud.callFunction({
         name: 'adminCheck',
-        data: { action: 'requestAdmin' }
+        data: { action: 'requestAdmin', name, remark }
       });
       wx.hideLoading();
+      this.setData({ applySubmitting: false });
       if (result && result.ok) {
+        this.setData({ applySheetVisible: false });
         wx.showModal({
           title: '申请已提交',
           content: '请等待负责人在小程序管理页审核，通过后你将自动获得审核权限。',
@@ -211,6 +258,7 @@ Page({
       }
     } catch (err) {
       wx.hideLoading();
+      this.setData({ applySubmitting: false });
       console.error('申请管理员失败', err);
       wx.showModal({
         title: '提交失败',

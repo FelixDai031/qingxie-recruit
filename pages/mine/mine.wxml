@@ -88,12 +88,51 @@
     <text class="admin-title">管理员入口</text>
     <text class="admin-arrow">▸</text>
   </view>
-  <view wx:elif="{{logged && !isAdmin}}" class="card admin-apply" bindtap="applyAdmin">
+  <view wx:elif="{{logged && !isAdmin}}" class="card admin-apply" bindtap="openApplySheet">
     <view class="admin-apply-main">
       <text class="admin-title">申请管理员认证</text>
-      <text class="admin-sub">点击在线提交申请，负责人审核通过后即可审核报名</text>
+      <text class="admin-sub">点击在线提交申请，需先填写你的姓名/备注，负责人审核通过后即可审核报名</text>
     </view>
     <text class="admin-arrow">▸</text>
+  </view>
+
+  <!-- 申请管理员弹层（点击卡片后弹出，填写姓名/备注后才能提交） -->
+  <view wx:if="{{applySheetVisible}}" class="apply-mask" bindtap="closeApplySheet">
+    <view class="apply-panel" catchtap="stopPropagation">
+      <view class="apply-title">申请管理员认证</view>
+      <view class="apply-desc">请填写你的姓名/备注，方便负责人识别；通过后将获得全部部门审核权限。</view>
+
+      <view class="apply-field">
+        <text class="apply-label"><text class="apply-required">*</text> 姓名 / 备注</text>
+        <input
+          class="apply-input"
+          placeholder="例如：李四 2024级 校青协"
+          placeholder-class="ph"
+          value="{{applyName}}"
+          bindinput="onApplyNameInput"
+          maxlength="30"
+          cursor-spacing="20"
+        />
+      </view>
+
+      <view class="apply-field">
+        <text class="apply-label">补充说明（可选）</text>
+        <textarea
+          class="apply-textarea"
+          placeholder="例如：负责 XX 部门招新 / 已被面试官 X 老师推荐"
+          placeholder-class="ph"
+          value="{{applyRemark}}"
+          bindinput="onApplyRemarkInput"
+          maxlength="200"
+          auto-height
+        />
+      </view>
+
+      <view class="apply-actions">
+        <button class="btn-cancel" bindtap="closeApplySheet">取消</button>
+        <button class="btn-primary btn-confirm" bindtap="submitApplyAdmin" loading="{{applySubmitting}}" disabled="{{applySubmitting || !applyName}}">提交申请</button>
+      </view>
+    </view>
   </view>
 
   <view style="height:40rpx;"></view>

@@ -139,7 +139,10 @@ Page({
         const list = (result.data || []).map(it => ({
           ...it,
           idShort: (it.openid || '').slice(0, 12) + '…',
-          timeText: this.formatDate(it.createTime)
+          timeText: this.formatDate(it.createTime),
+          // 兼容老数据（无 name 字段）
+          name: it.name || '',
+          remark: it.remark || ''
         }));
         this.setData({
           adminRequests: list,
