@@ -33,8 +33,31 @@ async function getOpenid() {
   }
 }
 
+/**
+ * 把 cloud:// 文件 ID 批量转换为 https 临时下载链接
+ * 真机和小程序 <image>、wx.previewImage 都必须用 https URL 才能显示
+ */
+async function getCloudFileUrls(fileIDs) {
+  if (!fileIDs || !fileIDs.length) return [];
+  const list = fileIDs.map(id => id || '');
+  const needConvert = list.filter(id => /^cloud:\/\//.test(id));
+  if (needConvert.length === 0) return list;
+  try {
+    const res = await wx.cloud.getTempFileURL({ fileList: needConvert });
+    const map = {};
+    (res.fileList || []).forEach(item => {
+      map[item.fileID] = item.tempFileURL || item.fileID;
+    });
+    return list.map(id => map[id] || id);
+  } catch (e) {
+    console.error('getTempFileURL fail', e);
+    return list;
+  }
+}
+
 module.exports = {
   db,
   getDepartments,
-  getOpenid
+  getOpenid,
+  getCloudFileUrls
 };

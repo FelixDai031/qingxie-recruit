@@ -1,10 +1,11 @@
 // pages/department/department.js —— 部门详情
-const { getDepartments } = require('../../utils/cloud.js');
+const { getDepartments, getCloudFileUrls } = require('../../utils/cloud.js');
 
 Page({
   data: {
     deptId: '',
-    dept: { icon: '', name: '', slogan: '', intro: '', duties: [], requirements: [] }
+    dept: { icon: '', name: '', slogan: '', intro: '', duties: [], requirements: [] },
+    photoUrls: []
   },
 
   async onLoad(options) {
@@ -16,7 +17,8 @@ Page({
   async loadDept(id) {
     const list = await getDepartments();
     const dept = list.find(d => d._id === id) || list[0] || {};
-    this.setData({ dept });
+    const photoUrls = Array.isArray(dept.photos) ? await getCloudFileUrls(dept.photos) : [];
+    this.setData({ dept, photoUrls });
     // 动态设置导航栏标题
     if (dept.name) {
       wx.setNavigationBarTitle({ title: dept.name });
@@ -32,14 +34,14 @@ Page({
     wx.switchTab({ url: '/pages/apply/apply' });
   },
 
-  // 相册照片全屏预览
+  // 相册照片全屏预览（必须用 https 临时链接）
   previewPhoto(e) {
     const index = Number(e.currentTarget.dataset.index);
-    const photos = this.data.dept.photos || [];
-    if (!photos.length) return;
+    const urls = this.data.photoUrls || [];
+    if (!urls.length) return;
     wx.previewImage({
-      current: photos[index],
-      urls: photos
+      current: urls[index],
+      urls
     });
   },
 

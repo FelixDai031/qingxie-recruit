@@ -30,7 +30,7 @@
       <view class="photo-hint">照片将展示在部门详情页，供报名同学了解部门活动（最多 20 张）。</view>
       <view class="photo-grid">
         <view wx:for="{{photos}}" wx:key="*this" class="photo-cell">
-          <image class="photo-img" src="{{item}}" mode="aspectFill" />
+          <image class="photo-img" src="{{photoUrls[index]}}" mode="aspectFill" />
           <view class="photo-del" catchtap="removePhoto" data-id="{{item}}">×</view>
         </view>
         <view wx:if="{{photos.length < 20}}" class="photo-cell photo-add {{uploading ? 'uploading' : ''}}" catchtap="addPhoto">

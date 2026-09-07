@@ -2,6 +2,8 @@
 
 const MAX_INTRO = 500;
 
+const { getCloudFileUrls } = require('../../utils/cloud.js');
+
 Page({
   data: {
     deptList: [],      // 部门原始数据（含 _id）
@@ -12,6 +14,7 @@ Page({
     intro: '',
     slogan: '',
     photos: [],        // 当前部门活动相册（fileID 数组）
+    photoUrls: [],     // fileID 对应的 https 临时链接（用于真机显示）
     uploading: false,
     saving: false
   },
@@ -79,10 +82,13 @@ Page({
         wx.showToast({ title: (result && result.msg) || '部门读取失败', icon: 'none' });
         return;
       }
+      const photos = Array.isArray(data.photos) ? data.photos : [];
+      const photoUrls = await getCloudFileUrls(photos);
       this.setData({
         intro: data.intro || '',
         slogan: data.slogan || '',
-        photos: Array.isArray(data.photos) ? data.photos : []
+        photos,
+        photoUrls
       });
       wx.setNavigationBarTitle({ title: '编辑 · ' + (data.name || '部门') });
     } catch (err) {
@@ -127,7 +133,9 @@ Page({
       });
       wx.hideLoading();
       if (result && result.ok) {
-        this.setData({ photos: result.photos || [] });
+        const photos = result.photos || [];
+        const photoUrls = await getCloudFileUrls(photos);
+        this.setData({ photos, photoUrls });
         wx.showToast({ title: '上传成功', icon: 'success' });
       } else {
         // 写入失败，清理刚上传的孤儿文件
@@ -170,7 +178,9 @@ Page({
       });
       wx.hideLoading();
       if (result && result.ok) {
-        this.setData({ photos: result.photos || [] });
+        const photos = result.photos || [];
+        const photoUrls = await getCloudFileUrls(photos);
+        this.setData({ photos, photoUrls });
         wx.showToast({ title: '已删除', icon: 'success' });
       } else {
         wx.showModal({ title: '删除失败', content: (result && result.msg) || '请重试', showCancel: false });

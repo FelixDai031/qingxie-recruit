@@ -13,11 +13,11 @@
   </view>
 
   <!-- 活动相册 -->
-  <view wx:if="{{dept.photos.length}}" class="card">
+  <view wx:if="{{photoUrls.length}}" class="card">
     <view class="section-title">活动相册</view>
     <view class="album-grid">
       <image
-        wx:for="{{dept.photos}}"
+        wx:for="{{photoUrls}}"
         wx:key="*this"
         class="album-img"
         src="{{item}}"
